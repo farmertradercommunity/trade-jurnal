@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmer Circle Journal Trade</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #080b0f;
+    --bg-deep: #0d1117;
+    --bg-card: #111820;
+    --bg-card2: #161d27;
+    --bg-input: #0f1620;
+    --bg-hover: #1a2333;
+    --border: #1e2d3d;
+    --border-glow: #2a4060;
+    --accent: #e8b86d;
+    --accent2: #c9956a;
+    --accent-dim: rgba(232,184,109,0.12);
+    --accent-glow: rgba(232,184,109,0.25);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.12);
+    --red: #f0626c;
+    --red-dim: rgba(240,98,108,0.12);
+    --blue: #5b9cf6;
+    --blue-dim: rgba(91,156,246,0.12);
+    --text-primary: #e8edf3;
+    --text-secondary: #7a8fa6;
+    --text-muted: #3d5068;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 20% 20%, rgba(232,184,109,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 80% 80%, rgba(91,156,246,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== NAV ===== */
+  .topbar {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    position: sticky;
+    top: 0;
+    background: rgba(8,11,15,0.92);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-icon svg { width: 18px; height: 18px; }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+  }
+
+  .logo-text span {
+    color: var(--accent);
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+  }
+
+  .nav-tab {
+    padding: 7px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    letter-spacing: 0.01em;
+  }
+
+  .nav-tab.active {
+    background: var(--accent);
+    color: #080b0f;
+  }
+
+  .nav-tab:hover:not(.active) {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+  }
+
+  /* ===== PAGES ===== */
+  .page { display: none; padding: 36px 0 80px; }
+  .page.active { display: block; }
+
+  /* ===== HERO STATS ===== */
+  .hero-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .hero-title span { color: var(--accent); }
+
+  .hero-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .stat-card:hover { border-color: var(--border-glow); }
+  .stat-card:hover::before { opacity: 1; }
+
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.accent { color: var(--accent); }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-family: var(--font-mono);
+  }
+
+  /* ===== SECTION TITLE ===== */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ===== TRADE ENTRY FORM ===== */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .form-grid.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .field-group.full { grid-column: 1 / -1; }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .field-label .req {
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .field-input,
+  .field-select,
+  .field-textarea {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 400;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .field-input:focus,
+  .field-select:focus,
+  .field-textarea:focus {
+    border-color: var(--accent);
+    background: var(--bg-card2);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  .field-input::placeholder { color: var(--text-muted); }
+
+  .field-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8fa6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .field-select option {
+    background: #111820;
+    color: var(--text-primary);
+  }
+
+  .field-textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+    font-family: var(--font-body);
+    font-size: 13px;
+  }
+
+  /* Direction toggle */
+  .direction-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dir-btn {
+    padding: 11px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .dir-btn.buy.active {
+    background: var(--green-dim);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .dir-btn.sell.active {
+    background: var(--red-dim);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .dir-btn:hover:not(.active) {
+    border-color: var(--border-glow);
+    color: var(--text-primary);
+  }
+
+  /* Emotion selector */
+  .emotion-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .emotion-btn {
+    padding: 7px 13px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+  }
+
+  .emotion-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .emotion-btn:hover:not(.active) {
+    border-color: var(--border-glow);
+    color: var(--text-primary);
+  }
+
+  /* Result outcome */
+  .outcome-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .outcome-btn {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  .outcome-btn.win.active { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+  .outcome-btn.loss.active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+  .outcome-btn.be.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+  .outcome-btn:hover:not(.active) { border-color: var(--border-glow); color: var(--text-primary); }
+
+  /* Auto-calc display */
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .calc-box {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .calc-box-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 6px;
+  }
+
+  .calc-box-value {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent);
+    color: #080b0f;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .submit-btn:hover::before { opacity: 1; }
+  .submit-btn:active { transform: scale(0.99); }
+
+  /* ===== TRADE LOG TABLE ===== */
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .filter-pill {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+  }
+
+  .filter-pill.active, .filter-pill:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .trade-table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .trade-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .trade-table thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .trade-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+
+  .trade-table tbody tr {
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+    transition: background 0.15s;
+  }
+
+  .trade-table tbody tr:last-child { border-bottom: none; }
+  .trade-table tbody tr:hover { background: var(--bg-hover); }
+
+  .trade-table td {
+    padding: 13px 16px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .trade-table td.highlight { color: var(--text-primary); font-weight: 500; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-family: var(--font-display);
+  }
+
+  .badge.buy { background: var(--green-dim); color: var(--green); }
+  .badge.sell { background: var(--red-dim); color: var(--red); }
+  .badge.win { background: var(--green-dim); color: var(--green); }
+  .badge.loss { background: var(--red-dim); color: var(--red); }
+  .badge.be { background: var(--blue-dim); color: var(--blue); }
+
+  .pair-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    background: rgba(232,184,109,0.08);
+    border: 1px solid rgba(232,184,109,0.2);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .pnl-pos { color: var(--green); font-weight: 500; }
+  .pnl-neg { color: var(--red); font-weight: 500; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-state .big-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+    font-family: var(--font-mono);
+  }
+
+  /* ===== PERFORMANCE PAGE ===== */
+  .perf-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .perf-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .perf-card-title {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .pair-stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+  }
+
+  .pair-stat:last-child { border-bottom: none; }
+
+  .pair-stat-name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .pair-stat-bar-wrap {
+    flex: 1;
+    margin: 0 16px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .pair-stat-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  .pair-stat-pnl {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 70px;
+    text-align: right;
+  }
+
+  /* Equity curve canvas */
+  .chart-wrap {
+    position: relative;
+    height: 180px;
+    margin-top: 8px;
+  }
+
+  /* Session heatmap */
+  .session-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .session-card {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .session-card:hover { border-color: var(--border-glow); }
+
+  .session-name {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .session-pnl {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .session-trades {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--bg-card2);
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 14px 20px;
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.error { border-color: var(--red); color: var(--red); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-glow); }
+
+  /* ===== SETUP MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,11,15,0.92);
+    backdrop-filter: blur(16px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 36px 32px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    position: relative;
+  }
+
+  .modal-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+
+  .modal-title span { color: var(--accent); }
+
+  .modal-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .modal-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent);
+    color: #080b0f;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .modal-btn:hover { opacity: 0.9; }
+
+  /* ===== EQUITY CHART ===== */
+  .equity-chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+  }
+
+  #equityCanvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Form card */
+  .form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .divider-line {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* Trade row detail expand */
+  .expand-row {
+    display: none;
+    background: var(--bg-deep);
+  }
+
+  .expand-row.open { display: table-row; }
+
+  .expand-content {
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-family: var(--font-body);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 700px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-grid, .form-grid.three, .form-grid.four { grid-template-columns: 1fr 1fr; }
+    .calc-grid, .session-grid { grid-template-columns: repeat(2, 1fr); }
+    .perf-row { grid-template-columns: 1fr; }
+    .nav-tabs { display: none; }
+    .hero-title { font-size: 24px; }
+  }
+
+  /* Animated entrance */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page.active > * {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .page.active > *:nth-child(2) { animation-delay: 0.06s; }
+  .page.active > *:nth-child(3) { animation-delay: 0.12s; }
+  .page.active > *:nth-child(4) { animation-delay: 0.18s; }
+
+  /* Ticker bar */
+  .ticker-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-deep);
+    overflow: hidden;
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 48px;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+    padding: 0 48px;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ticker-pair { color: var(--text-primary); font-weight: 500; }
+  .ticker-up { color: var(--green); }
+  .ticker-down { color: var(--red); }
+
+  /* Progress ring for win rate */
+  .win-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .ring-svg { transform: rotate(-90deg); }
+
+  .ring-label {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+
+  .ring-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-top: 2px;
+  }
+
+  /* Checklist */
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+  }
+
+  .checklist-item:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border-glow);
+    border-radius: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .check-box.checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .check-box.checked::after {
+    content: '';
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid #080b0f;
+    border-bottom: 2px solid #080b0f;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  .check-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    line-height: 1.5;
+  }
+
+  .check-text.checked-text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+
+  .streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(232,184,109,0.3);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SETUP MODAL ===== -->
+<div class="modal-overlay" id="setupModal">
+  <div class="modal-box">
+    <div class="modal-logo">
+      <div class="logo-icon" style="width:36px;height:36px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 18 18" fill="none" width="20" height="20">
+          <path d="M2 14L7 9L10 12L14 6L16 8" stroke="#080b0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="14" cy="5" r="2" fill="#080b0f"/>
+        </svg>
+      </div>
+      <div style="font-family:var(--font-display);font-size:15px;font-weight:700;">FARMER CIRCLE <span style="color:var(--accent)">JOURNAL</span></div>
+    </div>
+    <div class="modal-title">Selamat Datang, <span>Trader! 👋</span></div>
+    <div class="modal-sub">Sebelum mulai, masukkan data akun kamu sekali saja.<br>Data ini disimpan di browser kamu — tidak dibagikan ke siapapun.</div>
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <div class="field-label">Nama / Alias Trader <span class="req">*</span></div>
+      <input type="text" class="field-input" id="setupName" placeholder="Contoh: Budi Trader" autocomplete="off">
+    </div>
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <div class="field-label">Balance Awal Akun ($) <span class="req">*</span></div>
+      <input type="number" class="field-input" id="setupBalance" placeholder="Contoh: 1000" min="1" step="0.01">
+      <div style="font-size:11px;color:var(--text-muted);margin-top:5px;font-family:var(--font-mono);">Ini akan jadi titik awal grafik pertumbuhan akun kamu</div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:24px;">
+      <div class="field-label">Broker / Platform</div>
+      <input type="text" class="field-input" id="setupBroker" placeholder="Contoh: IC Markets, Exness, dll" autocomplete="off">
+    </div>
+
+    <button class="modal-btn" onclick="saveSetup()">MULAI JURNAL →</button>
+  </div>
+</div>
+
+<!-- Ticker Bar -->
+<div class="ticker-bar">
+  <div class="ticker-inner" id="tickerContent">
+    <div class="ticker-item"><span class="ticker-pair">XAU/USD</span><span class="ticker-up">+0.42%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">GBP/USD</span><span class="ticker-down">-0.18%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">EUR/USD</span><span class="ticker-up">+0.09%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">USD/JPY</span><span class="ticker-down">-0.33%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">GBP/JPY</span><span class="ticker-up">+0.27%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">BTC/USD</span><span class="ticker-up">+1.84%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">SESSION</span><span style="color:var(--accent)">NEW YORK OPEN</span></div>
+    <div class="ticker-item"><span class="ticker-pair">XAU/USD</span><span class="ticker-up">+0.42%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">GBP/USD</span><span class="ticker-down">-0.18%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">EUR/USD</span><span class="ticker-up">+0.09%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">USD/JPY</span><span class="ticker-down">-0.33%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">GBP/JPY</span><span class="ticker-up">+0.27%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">BTC/USD</span><span class="ticker-up">+1.84%</span></div>
+    <div class="ticker-item"><span class="ticker-pair">SESSION</span><span style="color:var(--accent)">NEW YORK OPEN</span></div>
+  </div>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 18 18" fill="none">
+          <path d="M2 14L7 9L10 12L14 6L16 8" stroke="#080b0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="14" cy="5" r="2" fill="#080b0f"/>
+        </svg>
+      </div>
+      <div class="logo-text">FARMER CIRCLE<span> JOURNAL</span></div>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchPage('dashboard')">Dashboard</button>
+      <button class="nav-tab" onclick="switchPage('entry')">Trade Entry</button>
+      <button class="nav-tab" onclick="switchPage('log')">Trade Log</button>
+      <button class="nav-tab" onclick="switchPage('performance')">Performance</button>
+      <button class="nav-tab" onclick="switchPage('calendar')">Eco Calendar</button>
+      <button class="nav-tab" onclick="switchPage('checklist')">Pre-Trade</button>
+    </nav>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD PAGE ============ -->
+<div class="page active" id="page-dashboard">
+  <div class="container">
+
+    <div class="hero-header">
+      <div>
+        <div class="hero-title">Selamat datang,<br><span id="heroTraderName">Trader.</span></div>
+        <div class="hero-subtitle" id="dashDate">// loading...</div>
+      </div>
+      <div class="streak-badge" id="streakBadge">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1C7 1 10 4 10 7C10 8.66 8.66 10 7 10C5.34 10 4 8.66 4 7C4 5.5 5 4.5 5 4.5C5 4.5 5.5 6 6.5 6C6.5 5 6 3.5 7 1Z" fill="currentColor"/>
+          <path d="M6 10C6 10 5 11.5 5 12.5C5 13.05 5.45 13.5 6 13.5H8C8.55 13.5 9 13.05 9 12.5C9 11.5 8 10 8 10H6Z" fill="currentColor" opacity="0.6"/>
+        </svg>
+        <span id="streakText">0 Day Streak</span>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total P&amp;L</div>
+        <div class="stat-value accent" id="dashPnl">$0.00</div>
+        <div class="stat-sub" id="dashPnlSub">0 trades total</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Win Rate</div>
+        <div class="stat-value green" id="dashWinRate">0%</div>
+        <div class="stat-sub" id="dashWinSub">0W / 0L / 0BE</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Profit Factor</div>
+        <div class="stat-value accent" id="dashPF">—</div>
+        <div class="stat-sub">gross profit / gross loss</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Avg R:R Aktual</div>
+        <div class="stat-value" style="color:var(--blue)" id="dashRR">—</div>
+        <div class="stat-sub">rata-rata semua trade</div>
+      </div>
+    </div>
+
+    <div class="section-title">Recent Trades</div>
+    <div class="form-card" style="padding:0;overflow:hidden;">
+      <table class="trade-table" id="recentTable">
+        <thead>
+          <tr>
+            <th>Tanggal</th><th>Pair</th><th>Arah</th><th>Session</th><th>Entry</th><th>Exit</th><th>Pips</th><th>P&amp;L</th><th>Hasil</th>
+          </tr>
+        </thead>
+        <tbody id="recentBody">
+          <tr><td colspan="9"><div class="empty-state"><div class="big-icon">◈</div><p>Belum ada trade. Mulai dari Trade Entry.</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-title" style="margin-top:20px;">Quick Actions</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+      <button onclick="switchPage('entry')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;color:var(--text-primary);cursor:pointer;text-align:left;transition:all 0.2s;font-family:var(--font-body);" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:20px;margin-bottom:8px;color:var(--accent)">+</div>
+        <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:4px;">New Trade</div>
+        <div style="font-size:12px;color:var(--text-muted);">Catat trade baru</div>
+      </button>
+      <button onclick="switchPage('performance')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;color:var(--text-primary);cursor:pointer;text-align:left;transition:all 0.2s;font-family:var(--font-body);" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:20px;margin-bottom:8px;color:var(--green)">↗</div>
+        <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:4px;">Performance</div>
+        <div style="font-size:12px;color:var(--text-muted);">Lihat statistik lengkap</div>
+      </button>
+      <button onclick="switchPage('checklist')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;color:var(--text-primary);cursor:pointer;text-align:left;transition:all 0.2s;font-family:var(--font-body);" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:20px;margin-bottom:8px;color:var(--blue)">✓</div>
+        <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:4px;">Pre-Trade Check</div>
+        <div style="font-size:12px;color:var(--text-muted);">Cek sebelum entry</div>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ TRADE ENTRY PAGE ============ -->
+<div class="page" id="page-entry">
+  <div class="container">
+
+    <div class="hero-header">
+      <div>
+        <div class="hero-title">Trade <span>Entry</span></div>
+        <div class="hero-subtitle">// isi dengan tenang, tidak perlu buru-buru</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Pre-trade -->
+    <div class="section-title">01 — Sebelum Entry</div>
+    <div class="form-card">
+      <div class="form-grid four">
+        <div class="field-group">
+          <div class="field-label">Tanggal <span class="req">*</span></div>
+          <input type="date" class="field-input" id="fDate">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Session <span class="req">*</span></div>
+          <select class="field-select" id="fSession">
+            <option value="">Pilih session</option>
+            <option>Asia (02.00 – 10.00 WIB)</option>
+            <option>London (14.00 – 23.00 WIB)</option>
+            <option>New York Pagi (19.00 – 22.00 WIB)</option>
+            <option>New York Siang (22.00 – 01.00 WIB)</option>
+            <option>New York Malam (01.00 – 04.00 WIB)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Pair <span class="req">*</span></div>
+          <select class="field-select" id="fPair">
+            <option value="">Pilih pair</option>
+            <option>XAU/USD</option>
+            <option>GBP/USD</option>
+            <option>EUR/USD</option>
+            <option>USD/JPY</option>
+            <option>GBP/JPY</option>
+            <option>BTC/USD</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Lot Size <span class="req">*</span></div>
+          <input type="number" class="field-input" id="fLot" placeholder="0.01" step="0.01" min="0.01">
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <div class="form-grid">
+        <div class="field-group">
+          <div class="field-label">Arah Posisi <span class="req">*</span></div>
+          <div class="direction-toggle">
+            <button class="dir-btn buy" id="btnBuy" onclick="setDirection('BUY')">▲ BUY</button>
+            <button class="dir-btn sell" id="btnSell" onclick="setDirection('SELL')">▼ SELL</button>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Harga Entry <span class="req">*</span></div>
+          <input type="number" class="field-input" id="fEntry" placeholder="0.00000" step="0.00001" oninput="calcRR()">
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <div class="form-grid three">
+        <div class="field-group">
+          <div class="field-label">Stop Loss (SL) <span class="req">*</span></div>
+          <input type="number" class="field-input" id="fSL" placeholder="0.00000" step="0.00001" oninput="calcRR()">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Take Profit (TP) <span class="req">*</span></div>
+          <input type="number" class="field-input" id="fTP" placeholder="0.00000" step="0.00001" oninput="calcRR()">
+        </div>
+        <div class="field-group">
+          <div class="field-label">RR Plan (otomatis)</div>
+          <div class="field-input" id="fRRPlan" style="color:var(--accent);cursor:default;">—</div>
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <div class="field-group">
+        <div class="field-label">Alasan Entry</div>
+        <textarea class="field-textarea" id="fReason" placeholder="Contoh: Break of structure di 4H + FVG konfluens di 1H, session New York open, momentum bullish..."></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 2: Emotional state -->
+    <div class="section-title">02 — Kondisi Mental</div>
+    <div class="form-card">
+      <div class="field-group">
+        <div class="field-label">Kondisi Emosional saat entry</div>
+        <div class="emotion-grid" id="emotionBtns">
+          <button class="emotion-btn" onclick="setEmotion(this, 'Tenang')">Tenang</button>
+          <button class="emotion-btn" onclick="setEmotion(this, 'Percaya Diri')">Percaya Diri</button>
+          <button class="emotion-btn" onclick="setEmotion(this, 'Ragu')">Ragu</button>
+          <button class="emotion-btn" onclick="setEmotion(this, 'FOMO')">FOMO</button>
+          <button class="emotion-btn" onclick="setEmotion(this, 'Takut')">Takut</button>
+          <button class="emotion-btn" onclick="setEmotion(this, 'Greedy')">Greedy</button>
+          <button class="emotion-btn" onclick="setEmotion(this, 'Revenge Trade')">Revenge Trade</button>
+          <button class="emotion-btn" onclick="setEmotion(this, 'Fokus')">Fokus</button>
+        </div>
+      </div>
+      <input type="hidden" id="fEmotion" value="">
+    </div>
+
+    <!-- STEP 3: Close trade -->
+    <div class="section-title">03 — Setelah Close Trade</div>
+    <div class="form-card">
+      <div class="form-grid three">
+        <div class="field-group">
+          <div class="field-label">Harga Exit</div>
+          <input type="number" class="field-input" id="fExit" placeholder="0.00000" step="0.00001" oninput="calcClose()">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Profit/Loss ($) <span style="color:var(--green);font-size:10px;font-family:var(--font-mono);">✦ isi manual</span></div>
+          <input type="number" class="field-input" id="fPnl" placeholder="contoh: +100.50 atau -45.20" oninput="onPnlChange()">
+          <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:3px;">Isi sesuai P&L di platform (MT4/MT5). Balance akan otomatis terhitung.</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Balance Setelah <span style="color:var(--accent);font-size:10px;font-family:var(--font-mono);">✦ otomatis</span></div>
+          <input type="number" class="field-input" id="fBalance" placeholder="otomatis terisi" readonly style="opacity:0.7;cursor:not-allowed;">
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <div class="calc-grid">
+        <div class="calc-box">
+          <div class="calc-box-label">Total Pips</div>
+          <div class="calc-box-value" id="calcPips">—</div>
+        </div>
+        <div class="calc-box">
+          <div class="calc-box-label">RR Aktual</div>
+          <div class="calc-box-value" id="calcRRActual">—</div>
+        </div>
+        <div class="calc-box">
+          <div class="calc-box-label">% Balance</div>
+          <div class="calc-box-value" id="calcPct">—</div>
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <div class="field-group">
+        <div class="field-label">Hasil Trade</div>
+        <div class="outcome-grid" id="outcomeBtns">
+          <button class="outcome-btn win" onclick="setOutcome(this, 'Win')">WIN</button>
+          <button class="outcome-btn loss" onclick="setOutcome(this, 'Loss')">LOSS</button>
+          <button class="outcome-btn be" onclick="setOutcome(this, 'Breakeven')">BE</button>
+        </div>
+      </div>
+      <input type="hidden" id="fOutcome" value="">
+
+      <div class="divider-line"></div>
+
+      <div class="field-group">
+        <div class="field-label">Catatan / Review trade</div>
+        <textarea class="field-textarea" id="fNotes" placeholder="Apa yang berjalan dengan baik? Apa yang bisa diperbaiki?"></textarea>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="saveTrade()">SIMPAN TRADE →</button>
+
+  </div>
+</div>
+
+<!-- ============ TRADE LOG PAGE ============ -->
+<div class="page" id="page-log">
+  <div class="container">
+
+    <div class="hero-header">
+      <div>
+        <div class="hero-title">Trade <span>Log</span></div>
+        <div class="hero-subtitle">// semua catatan trading lo</div>
+      </div>
+    </div>
+
+    <div class="table-header">
+      <div class="filter-row" id="filterRow">
+        <button class="filter-pill active" onclick="filterTrades(this, 'All')">All</button>
+        <button class="filter-pill" onclick="filterTrades(this, 'Win')">Win</button>
+        <button class="filter-pill" onclick="filterTrades(this, 'Loss')">Loss</button>
+        <button class="filter-pill" onclick="filterTrades(this, 'Breakeven')">BE</button>
+        <button class="filter-pill" onclick="filterTrades(this, 'XAU/USD')">XAU/USD</button>
+        <button class="filter-pill" onclick="filterTrades(this, 'GBP/USD')">GBP/USD</button>
+        <button class="filter-pill" onclick="filterTrades(this, 'EUR/USD')">EUR/USD</button>
+      </div>
+      <button onclick="clearAll()" style="background:transparent;border:1px solid var(--red-dim);color:var(--red);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:var(--font-body);">Hapus Semua</button>
+    </div>
+
+    <div class="trade-table-wrap">
+      <table class="trade-table" id="logTable">
+        <thead>
+          <tr>
+            <th>#</th><th>Tanggal</th><th>Pair</th><th>Arah</th><th>Session</th>
+            <th>Entry</th><th>Exit</th><th>Pips</th><th>P&amp;L</th><th>RR</th><th>Emosi</th><th>Hasil</th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="12"><div class="empty-state"><div class="big-icon">◈</div><p>Belum ada trade tercatat.</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ PERFORMANCE PAGE ============ -->
+<div class="page" id="page-performance">
+  <div class="container">
+
+    <div class="hero-header">
+      <div>
+        <div class="hero-title">Per<span>formance</span></div>
+        <div class="hero-subtitle">// track your growth</div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-label">Total Win</div>
+        <div class="stat-value green" id="perfWins">0</div>
+        <div class="stat-sub">trades profitable</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Total Loss</div>
+        <div class="stat-value red" id="perfLoss">0</div>
+        <div class="stat-sub">trades loss</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Best Trade</div>
+        <div class="stat-value green" id="perfBest">—</div>
+        <div class="stat-sub" id="perfBestPair">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Worst Trade</div>
+        <div class="stat-value red" id="perfWorst">—</div>
+        <div class="stat-sub" id="perfWorstPair">—</div>
+      </div>
+    </div>
+
+    <div class="perf-row">
+      <div class="perf-card">
+        <div class="perf-card-title">Win Rate</div>
+        <div class="win-ring-wrap">
+          <svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--border)" stroke-width="6"/>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--accent)" stroke-width="6"
+              stroke-linecap="round"
+              stroke-dasharray="201"
+              stroke-dashoffset="201"
+              id="winRingCircle"
+              style="transition: stroke-dashoffset 1.2s ease"/>
+          </svg>
+          <div>
+            <div class="ring-label" id="perfWinRate">0%</div>
+            <div class="ring-sub" id="perfWinRateSub">0 win dari 0 trade</div>
+          </div>
+        </div>
+      </div>
+      <div class="perf-card">
+        <div class="perf-card-title">Performa per pair</div>
+        <div id="pairStats">
+          <div style="color:var(--text-muted);font-size:13px;font-family:var(--font-mono);">Belum ada data.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Performa per Session</div>
+    <div class="session-grid" id="sessionStats" style="grid-template-columns:repeat(5,1fr);">
+      <div class="session-card"><div class="session-name">Asia</div><div style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">02:00–10:00 WIB</div><div class="session-pnl" id="sAsia" style="color:var(--text-muted)">—</div><div class="session-trades" id="sAsiaT">0 trades</div></div>
+      <div class="session-card"><div class="session-name">London</div><div style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">14:00–23:00 WIB</div><div class="session-pnl" id="sLondon" style="color:var(--text-muted)">—</div><div class="session-trades" id="sLondonT">0 trades</div></div>
+      <div class="session-card"><div class="session-name">NY Pagi</div><div style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">19:00–22:00 WIB</div><div class="session-pnl" id="sNYPagi" style="color:var(--text-muted)">—</div><div class="session-trades" id="sNYPagiT">0 trades</div></div>
+      <div class="session-card"><div class="session-name">NY Siang</div><div style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">22:00–01:00 WIB</div><div class="session-pnl" id="sNYSiang" style="color:var(--text-muted)">—</div><div class="session-trades" id="sNYSiangT">0 trades</div></div>
+      <div class="session-card"><div class="session-name">NY Malam</div><div style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">01:00–04:00 WIB</div><div class="session-pnl" id="sNYMalam" style="color:var(--text-muted)">—</div><div class="session-trades" id="sNYMalamT">0 trades</div></div>
+    </div>
+
+    <div class="section-title" style="margin-top:20px;">Emosi vs Hasil</div>
+    <div class="form-card">
+      <div id="emotionStats" style="color:var(--text-muted);font-size:13px;font-family:var(--font-mono);">Belum ada data.</div>
+    </div>
+
+    <div class="section-title" style="margin-top:20px;">📈 Grafik Pertumbuhan Akun</div>
+    <div class="form-card" style="padding:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;">Equity Curve</div>
+          <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--accent);margin-top:3px;" id="equityCurrentBal">$0.00</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">Total Return</div>
+          <div style="font-family:var(--font-mono);font-size:18px;font-weight:600;margin-top:3px;" id="equityReturn">—</div>
+        </div>
+      </div>
+      <div class="equity-chart-wrap">
+        <canvas id="equityCanvas"></canvas>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">⬤ <span style="color:var(--accent)">Balance</span> per trade</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);" id="equityStartBal"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ ECONOMIC CALENDAR PAGE ============ -->
+<div class="page" id="page-calendar">
+  <div class="container">
+
+    <div class="hero-header">
+      <div>
+        <div class="hero-title">Economic <span>Calendar</span></div>
+        <div class="hero-subtitle">// medium & high impact — jangan entry saat berita!</div>
+      </div>
+      <a href="https://www.fxstreet-id.com/economic-calendar" target="_blank" style="padding:7px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent-dim);color:var(--accent);font-size:12px;font-weight:600;text-decoration:none;font-family:var(--font-body);">Buka di Tab Baru ↗</a>
+    </div>
+
+    <!-- Session reference card -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:18px;">
+      <div class="section-title" style="margin-bottom:12px;">🕐 Jam Sesi Trading (WIB)</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">🌏 Asia</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--text-primary);font-weight:500;">02:00 – 10:00</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">WIB</div>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">🇬🇧 London</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--text-primary);font-weight:500;">14:00 – 23:00</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">WIB</div>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">🇺🇸 NY Pagi</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--text-primary);font-weight:500;">19:00 – 22:00</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">WIB</div>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">🇺🇸 NY Siang</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--text-primary);font-weight:500;">22:00 – 01:00</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">WIB</div>
+        </div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">🇺🇸 NY Malam</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--text-primary);font-weight:500;">01:00 – 04:00</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">WIB</div>
+        </div>
+      </div>
+    </div>
+
+    <!--  Calendar embed — medium + high impact, WIB timezone -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+      <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);"></div>
+        <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);">Economic Calendar — <span style="color:var(--accent)">Medium</span> + <span style="color:var(--red)">High Impact</span> — Timezone: WIB (UTC+7)</div>
+      </div>
+      <iframe
+        src="https://www.fxstreet-id.com/economic-calendar?lang=en&timezone=7&impact=2,3"
+        width="100%"
+        height="700"
+        frameborder="0"
+        scrolling="yes"
+        allowtransparency="true"
+        style="display:block;background:#0d1117;"
+      ></iframe>
+    </div>
+
+    <!-- Tips -->
+    <div style="margin-top:12px;background:rgba(240,98,108,0.07);border:1px solid rgba(240,98,108,0.2);border-radius:10px;padding:14px 16px;">
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);line-height:1.7;">
+        ⚠️ <strong style="color:var(--red)">High Impact (merah)</strong> — Jangan entry 30 menit sebelum & sesudah.<br>
+        🟡 <strong style="color:var(--accent)">Medium Impact (kuning)</strong> — Hati-hati, bisa volatile. Perketat SL.<br>
+        ✅ Kalau embed tidak muncul, klik "Buka di Tab Baru" di pojok kanan atas.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="page" id="page-checklist">
+  <div class="container">
+
+    <div class="hero-header">
+      <div>
+        <div class="hero-title">Pre-Trade <span>Checklist</span></div>
+        <div class="hero-subtitle">// pastikan semua terpenuhi sebelum entry</div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div style="font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px;">Market Analysis</div>
+      <div id="checklist1">
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Sudah lihat Higher Timeframe (D1/W1) untuk bias keseluruhan</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Sudah identifikasi level support & resistance utama</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Sudah cek economic calendar — tidak ada news high impact 30 menit ke depan</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Tren di 4H sesuai dengan arah entry yang akan diambil</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Ada minimal 2 konfluens yang mendukung entry (FVG, OB, BOS, dll)</div></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div style="font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px;">Risk Management</div>
+      <div id="checklist2">
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Sudah hitung lot size sesuai risk % yang ditentukan (maks 1-2%)</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">SL sudah dipasang di level yang logis (bukan asal)</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">RR minimal 1:1.5 sebelum entry</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Tidak sedang dalam kondisi drawdown berturut-turut (&gt;3 loss streak)</div></div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div style="font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px;">Mental State</div>
+      <div id="checklist3">
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Kondisi emosi stabil — tidak trading karena FOMO atau revenge</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Sudah istirahat cukup dan tidak tergesa-gesa</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Siap menerima hasil apapun (win atau loss) tanpa emosi berlebih</div></div>
+      </div>
+    </div>
+
+    <div id="checkScore" style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;">
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);margin-bottom:8px;">CHECKLIST SCORE</div>
+      <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--accent)" id="checkScoreVal">0 / 12</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:6px;" id="checkScoreMsg">Belum ada yang dicentang.</div>
+      <button onclick="resetChecklist()" style="margin-top:16px;background:transparent;border:1px solid var(--border);color:var(--text-secondary);border-radius:8px;padding:8px 20px;font-size:13px;cursor:pointer;font-family:var(--font-body);">Reset Checklist</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✓</span>
+  <span id="toastMsg">Trade berhasil disimpan</span>
+</div>
+
+<script>
+// ===== State =====
+let trades = JSON.parse(localStorage.getItem('fcj_trades') || '[]');
+let userProfile = JSON.parse(localStorage.getItem('fcj_profile') || 'null');
+let direction = '';
+let emotion = '';
+let outcome = '';
+
+// ===== Setup Modal =====
+function checkSetup() {
+  if (!userProfile) {
+    document.getElementById('setupModal').style.display = 'flex';
+  } else {
+    document.getElementById('setupModal').style.display = 'none';
+    applyProfile();
+  }
+}
+
+function saveSetup() {
+  const name    = document.getElementById('setupName').value.trim();
+  const balance = parseFloat(document.getElementById('setupBalance').value);
+  const broker  = document.getElementById('setupBroker').value.trim();
+  if (!name || !balance || balance <= 0) {
+    alert('Nama dan Balance awal wajib diisi!');
+    return;
+  }
+  userProfile = { name, initialBalance: balance, broker, createdAt: new Date().toISOString() };
+  localStorage.setItem('fcj_profile', JSON.stringify(userProfile));
+  document.getElementById('setupModal').style.display = 'none';
+  applyProfile();
+  updateDashboard();
+}
+
+function applyProfile() {
+  if (!userProfile) return;
+  const nameEl = document.getElementById('heroTraderName');
+  if (nameEl) nameEl.textContent = userProfile.name + ' 👋';
+}
+
+// ===== Navigation =====
+function switchPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const tabs = ['dashboard','entry','log','performance','calendar','checklist'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(id)].classList.add('active');
+  if (id === 'dashboard') updateDashboard();
+  if (id === 'log') renderLog('All');
+  if (id === 'performance') { updatePerformance(); drawEquityChart(); }
+}
+
+// ===== Date =====
+function updateDate() {
+  const d = new Date();
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  document.getElementById('dashDate').textContent =
+    `// ${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  document.getElementById('fDate').value = d.toISOString().split('T')[0];
+}
+updateDate();
+
+// ===== Direction =====
+function setDirection(dir) {
+  direction = dir;
+  document.getElementById('btnBuy').classList.toggle('active', dir === 'BUY');
+  document.getElementById('btnSell').classList.toggle('active', dir === 'SELL');
+}
+
+// ===== Emotion =====
+function setEmotion(btn, val) {
+  emotion = val;
+  document.getElementById('fEmotion').value = val;
+  document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===== Outcome =====
+function setOutcome(btn, val) {
+  outcome = val;
+  document.getElementById('fOutcome').value = val;
+  document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===== Auto-calc RR =====
+function calcRR() {
+  const entry = parseFloat(document.getElementById('fEntry').value);
+  const sl = parseFloat(document.getElementById('fSL').value);
+  const tp = parseFloat(document.getElementById('fTP').value);
+  if (entry && sl && tp) {
+    const risk = Math.abs(entry - sl);
+    const reward = Math.abs(tp - entry);
+    if (risk > 0) {
+      const rr = (reward / risk).toFixed(2);
+      document.getElementById('fRRPlan').textContent = '1 : ' + rr;
+    }
+  }
+}
+
+// ===== P&L change → auto-fill balance =====
+function onPnlChange() {
+  const pnl = parseFloat(document.getElementById('fPnl').value);
+  if (isNaN(pnl)) {
+    document.getElementById('fBalance').value = '';
+    calcClose();
+    return;
+  }
+  // Get latest balance: last trade's balance OR userProfile initial balance
+  const prevBalance = getLatestBalance();
+  const newBalance = prevBalance + pnl;
+  document.getElementById('fBalance').value = newBalance.toFixed(2);
+  calcClose();
+}
+
+function getLatestBalance() {
+  // Find most recent trade with a balance recorded
+  for (let t of trades) {
+    if (t.balance && t.balance > 0) return t.balance;
+  }
+  return userProfile ? userProfile.initialBalance : 0;
+}
+
+// ===== Auto-calc on close =====
+function calcClose() {
+  const entry = parseFloat(document.getElementById('fEntry').value);
+  const sl    = parseFloat(document.getElementById('fSL').value);
+  const exit  = parseFloat(document.getElementById('fExit').value);
+  const pnl   = parseFloat(document.getElementById('fPnl').value);
+  const bal   = parseFloat(document.getElementById('fBalance').value);
+
+  if (entry && exit) {
+    const pips = ((exit - entry) * 10000).toFixed(1);
+    document.getElementById('calcPips').textContent = pips > 0 ? '+' + pips : pips;
+    document.getElementById('calcPips').style.color = pips > 0 ? 'var(--green)' : 'var(--red)';
+  }
+
+  if (entry && sl && exit) {
+    const risk = Math.abs(entry - sl);
+    const actual = Math.abs(exit - entry);
+    if (risk > 0) {
+      const rr = (actual / risk).toFixed(2);
+      document.getElementById('calcRRActual').textContent = '1 : ' + rr;
+    }
+  }
+
+  if (pnl && bal) {
+    const prevBal = bal - pnl;
+    const pct = prevBal > 0 ? ((pnl / prevBal) * 100).toFixed(2) : '—';
+    document.getElementById('calcPct').textContent = pct !== '—' ? pct + '%' : '—';
+    document.getElementById('calcPct').style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+}
+
+// ===== Save Trade =====
+function saveTrade() {
+  const date    = document.getElementById('fDate').value;
+  const session = document.getElementById('fSession').value;
+  const pair    = document.getElementById('fPair').value;
+  const lot     = document.getElementById('fLot').value;
+  const entry   = document.getElementById('fEntry').value;
+  const sl      = document.getElementById('fSL').value;
+  const tp      = document.getElementById('fTP').value;
+
+  if (!date || !session || !pair || !lot || !entry || !sl || !tp || !direction) {
+    showToast('Lengkapi field wajib terlebih dahulu', true);
+    return;
+  }
+
+  const exit    = document.getElementById('fExit').value;
+  const pnl     = parseFloat(document.getElementById('fPnl').value) || 0;
+  const balance = parseFloat(document.getElementById('fBalance').value) || 0;
+  const reason  = document.getElementById('fReason').value;
+  const notes   = document.getElementById('fNotes').value;
+
+  const e = parseFloat(entry), ex = parseFloat(exit), s = parseFloat(sl);
+  const pips     = exit ? ((ex - e) * 10000).toFixed(1) : null;
+  const rrActual = (exit && sl) ? (Math.abs(ex - e) / Math.abs(e - s)).toFixed(2) : null;
+  const rrPlan   = (sl && tp) ? (Math.abs(parseFloat(tp) - e) / Math.abs(e - s)).toFixed(2) : null;
+  const prevBal  = balance - pnl;
+  const pct      = (pnl && prevBal > 0) ? ((pnl / prevBal) * 100).toFixed(2) : null;
+
+  const trade = {
+    id: Date.now(),
+    date, session, pair, lot: parseFloat(lot),
+    direction, entry: parseFloat(entry),
+    sl: parseFloat(sl), tp: parseFloat(tp),
+    exit: exit ? parseFloat(exit) : null,
+    pnl, balance, pips, rrPlan, rrActual, pct,
+    emotion, outcome, reason, notes
+  };
+
+  trades.unshift(trade);
+  localStorage.setItem('fcj_trades', JSON.stringify(trades));
+  showToast('Trade berhasil disimpan ✓');
+  resetForm();
+  updateDashboard();
+}
+
+function resetForm() {
+  ['fDate','fSession','fPair','fLot','fEntry','fSL','fTP','fExit','fPnl','fBalance','fReason','fNotes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  direction = ''; emotion = ''; outcome = '';
+  document.querySelectorAll('.dir-btn, .emotion-btn, .outcome-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('fRRPlan').textContent = '—';
+  document.getElementById('calcPips').textContent = '—';
+  document.getElementById('calcRRActual').textContent = '—';
+  document.getElementById('calcPct').textContent = '—';
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+}
+
+// ===== Dashboard =====
+function updateDashboard() {
+  const totalPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+  const wins  = trades.filter(t => t.outcome === 'Win').length;
+  const losses= trades.filter(t => t.outcome === 'Loss').length;
+  const bes   = trades.filter(t => t.outcome === 'Breakeven').length;
+  const winRate = trades.length ? ((wins / trades.length) * 100).toFixed(1) : 0;
+
+  const grossProfit = trades.filter(t => t.pnl > 0).reduce((s, t) => s + t.pnl, 0);
+  const grossLoss   = Math.abs(trades.filter(t => t.pnl < 0).reduce((s, t) => s + t.pnl, 0));
+  const pf = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : grossProfit > 0 ? '∞' : '—';
+
+  const rrs  = trades.filter(t => t.rrActual).map(t => parseFloat(t.rrActual));
+  const avgRR= rrs.length ? (rrs.reduce((a, b) => a + b, 0) / rrs.length).toFixed(2) : '—';
+
+  document.getElementById('dashPnl').textContent = (totalPnl >= 0 ? '+$' : '-$') + Math.abs(totalPnl).toFixed(2);
+  document.getElementById('dashPnl').className = 'stat-value ' + (totalPnl >= 0 ? 'green' : 'red');
+  document.getElementById('dashPnlSub').textContent = trades.length + ' trades total';
+  document.getElementById('dashWinRate').textContent = winRate + '%';
+  document.getElementById('dashWinSub').textContent = `${wins}W / ${losses}L / ${bes}BE`;
+  document.getElementById('dashPF').textContent = pf;
+  document.getElementById('dashRR').textContent = avgRR !== '—' ? '1:' + avgRR : '—';
+
+  // Streak
+  let streak = 0;
+  for (let t of trades) {
+    if (t.outcome === 'Win') streak++;
+    else break;
+  }
+  document.getElementById('streakText').textContent = streak + ' Day Streak';
+
+  // Recent table
+  const body = document.getElementById('recentBody');
+  if (!trades.length) {
+    body.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="big-icon">◈</div><p>Belum ada trade. Mulai dari Trade Entry.</p></div></td></tr>';
+    return;
+  }
+  body.innerHTML = trades.slice(0,5).map(t => `
+    <tr>
+      <td>${t.date}</td>
+      <td><span class="pair-tag">${t.pair}</span></td>
+      <td><span class="badge ${t.direction.toLowerCase()}">${t.direction}</span></td>
+      <td>${t.session || '—'}</td>
+      <td class="highlight">${t.entry}</td>
+      <td>${t.exit || '—'}</td>
+      <td class="${parseFloat(t.pips) >= 0 ? 'pnl-pos' : 'pnl-neg'}">${t.pips ? (t.pips > 0 ? '+' : '') + t.pips : '—'}</td>
+      <td class="${t.pnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">${t.pnl ? (t.pnl > 0 ? '+$' : '-$') + Math.abs(t.pnl).toFixed(2) : '—'}</td>
+      <td>${t.outcome ? `<span class="badge ${t.outcome.toLowerCase().replace('breakeven','be')}">${t.outcome}</span>` : '—'}</td>
+    </tr>
+  `).join('');
+}
+
+// ===== Trade Log =====
+function renderLog(filter) {
+  const filtered = filter === 'All' ? trades :
+    trades.filter(t => t.outcome === filter || t.pair === filter);
+  const body = document.getElementById('logBody');
+  if (!filtered.length) {
+    body.innerHTML = '<tr><td colspan="12"><div class="empty-state"><div class="big-icon">◈</div><p>Tidak ada trade.</p></div></td></tr>';
+    return;
+  }
+  body.innerHTML = filtered.map((t, i) => `
+    <tr onclick="expandRow(${t.id})" style="cursor:pointer">
+      <td class="highlight">${i+1}</td>
+      <td>${t.date}</td>
+      <td><span class="pair-tag">${t.pair}</span></td>
+      <td><span class="badge ${t.direction.toLowerCase()}">${t.direction}</span></td>
+      <td>${t.session || '—'}</td>
+      <td class="highlight">${t.entry}</td>
+      <td>${t.exit || '—'}</td>
+      <td class="${parseFloat(t.pips) >= 0 ? 'pnl-pos' : 'pnl-neg'}">${t.pips ? (parseFloat(t.pips) > 0 ? '+' : '') + t.pips : '—'}</td>
+      <td class="${t.pnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">${t.pnl ? (t.pnl > 0 ? '+$' : '-$') + Math.abs(t.pnl).toFixed(2) : '—'}</td>
+      <td style="color:var(--accent)">${t.rrActual ? '1:'+t.rrActual : '—'}</td>
+      <td style="color:var(--text-secondary);font-size:12px;">${t.emotion || '—'}</td>
+      <td>${t.outcome ? `<span class="badge ${t.outcome.toLowerCase().replace('breakeven','be')}">${t.outcome}</span>` : '—'}</td>
+    </tr>
+    <tr class="expand-row" id="expand-${t.id}">
+      <td colspan="12">
+        <div class="expand-content">
+          ${t.reason ? `<strong style="color:var(--accent);font-size:11px;letter-spacing:0.06em;font-family:var(--font-mono);">ALASAN ENTRY</strong><br>${t.reason}<br><br>` : ''}
+          ${t.notes ? `<strong style="color:var(--blue);font-size:11px;letter-spacing:0.06em;font-family:var(--font-mono);">CATATAN</strong><br>${t.notes}` : ''}
+          ${!t.reason && !t.notes ? '<span style="color:var(--text-muted);">Tidak ada catatan.</span>' : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function expandRow(id) {
+  const el = document.getElementById('expand-' + id);
+  if (el) el.classList.toggle('open');
+}
+
+function filterTrades(btn, filter) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderLog(filter);
+}
+
+function clearAll() {
+  if (confirm('Hapus semua data trade? Tindakan ini tidak bisa dibatalkan.')) {
+    trades = [];
+    localStorage.setItem('fcj_trades', JSON.stringify(trades));
+    renderLog('All');
+    updateDashboard();
+    showToast('Semua data dihapus', true);
+  }
+}
+
+// ===== Performance =====
+function updatePerformance() {
+  const wins    = trades.filter(t => t.outcome === 'Win').length;
+  const losses  = trades.filter(t => t.outcome === 'Loss').length;
+  const winRate = trades.length ? ((wins / trades.length) * 100).toFixed(1) : 0;
+
+  document.getElementById('perfWins').textContent = wins;
+  document.getElementById('perfLoss').textContent = losses;
+  document.getElementById('perfWinRate').textContent = winRate + '%';
+  document.getElementById('perfWinRateSub').textContent = `${wins} win dari ${trades.length} trade`;
+
+  // Ring animation
+  const circ = document.getElementById('winRingCircle');
+  const offset = 201 - (201 * winRate / 100);
+  setTimeout(() => { circ.style.strokeDashoffset = offset; }, 100);
+
+  // Best/worst
+  const sorted = [...trades].filter(t => t.pnl !== null).sort((a, b) => b.pnl - a.pnl);
+  if (sorted.length) {
+    const best  = sorted[0];
+    const worst = sorted[sorted.length - 1];
+    document.getElementById('perfBest').textContent = (best.pnl > 0 ? '+$' : '-$') + Math.abs(best.pnl).toFixed(2);
+    document.getElementById('perfBestPair').textContent = best.pair + ' · ' + (best.date || '');
+    document.getElementById('perfWorst').textContent = (worst.pnl > 0 ? '+$' : '-$') + Math.abs(worst.pnl).toFixed(2);
+    document.getElementById('perfWorstPair').textContent = worst.pair + ' · ' + (worst.date || '');
+  }
+
+  // Pair stats
+  const pairMap = {};
+  trades.forEach(t => {
+    if (!pairMap[t.pair]) pairMap[t.pair] = { pnl: 0, count: 0 };
+    pairMap[t.pair].pnl += (t.pnl || 0);
+    pairMap[t.pair].count++;
+  });
+  const maxAbs = Math.max(...Object.values(pairMap).map(p => Math.abs(p.pnl)), 1);
+  const pairEl = document.getElementById('pairStats');
+  if (!Object.keys(pairMap).length) {
+    pairEl.innerHTML = '<div style="color:var(--text-muted);font-size:13px;font-family:var(--font-mono);">Belum ada data.</div>';
+  } else {
+    pairEl.innerHTML = Object.entries(pairMap).map(([pair, data]) => `
+      <div class="pair-stat">
+        <div class="pair-stat-name">${pair}</div>
+        <div class="pair-stat-bar-wrap">
+          <div class="pair-stat-bar" style="width:${(Math.abs(data.pnl)/maxAbs*100).toFixed(0)}%;background:${data.pnl >= 0 ? 'var(--green)' : 'var(--red)'}"></div>
+        </div>
+        <div class="pair-stat-pnl ${data.pnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">${data.pnl >= 0 ? '+$' : '-$'}${Math.abs(data.pnl).toFixed(2)}</div>
+      </div>
+    `).join('');
+  }
+
+  // Session stats
+  const sessionDefs = [
+    { keyword: 'Asia',     pnlId: 'sAsia',    tradeId: 'sAsiaT' },
+    { keyword: 'London',   pnlId: 'sLondon',  tradeId: 'sLondonT' },
+    { keyword: 'NY Pagi',  pnlId: 'sNYPagi',  tradeId: 'sNYPagiT' },
+    { keyword: 'NY Siang', pnlId: 'sNYSiang', tradeId: 'sNYSiangT' },
+    { keyword: 'NY Malam', pnlId: 'sNYMalam', tradeId: 'sNYMalamT' },
+  ];
+  sessionDefs.forEach(({ keyword, pnlId, tradeId }) => {
+    const st  = trades.filter(t => t.session && t.session.includes(keyword));
+    const pnl = st.reduce((s, t) => s + (t.pnl || 0), 0);
+    document.getElementById(pnlId).textContent = st.length ? (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toFixed(2) : '—';
+    document.getElementById(pnlId).style.color  = st.length ? (pnl >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--text-muted)';
+    document.getElementById(tradeId).textContent = st.length + ' trades';
+  });
+
+  // Emotion stats
+  const emoMap = {};
+  trades.forEach(t => {
+    if (!t.emotion) return;
+    if (!emoMap[t.emotion]) emoMap[t.emotion] = { win: 0, loss: 0, total: 0 };
+    emoMap[t.emotion].total++;
+    if (t.outcome === 'Win') emoMap[t.emotion].win++;
+    else if (t.outcome === 'Loss') emoMap[t.emotion].loss++;
+  });
+  const emoEl = document.getElementById('emotionStats');
+  if (!Object.keys(emoMap).length) {
+    emoEl.innerHTML = '<div style="color:var(--text-muted);font-size:13px;font-family:var(--font-mono);">Belum ada data.</div>';
+  } else {
+    emoEl.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">` +
+      Object.entries(emoMap).map(([emo, data]) => {
+        const wr = data.total ? ((data.win / data.total) * 100).toFixed(0) : 0;
+        return `<div style="background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px;">
+          <div style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;">${emo}</div>
+          <div style="font-family:var(--font-mono);font-size:18px;font-weight:500;color:${wr >= 50 ? 'var(--green)' : 'var(--red)'};">${wr}% WR</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-top:2px;">${data.win}W / ${data.loss}L dari ${data.total} trade</div>
+        </div>`;
+      }).join('') + '</div>';
+  }
+}
+
+// ===== Equity Chart (Canvas) =====
+let equityChartData = [];
+
+function buildEquityData() {
+  const initBal = userProfile ? userProfile.initialBalance : 0;
+  // Trades sorted oldest-first
+  const sorted = [...trades].reverse();
+  const points = [{ label: 'Start', balance: initBal }];
+  sorted.forEach((t, i) => {
+    if (t.balance && t.balance > 0) {
+      points.push({ label: t.date || `#${i+1}`, balance: t.balance });
+    }
+  });
+  return points;
+}
+
+function drawEquityChart() {
+  const canvas = document.getElementById('equityCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width  = rect.width * dpr;
+  canvas.height = 220 * dpr;
+  canvas.style.width  = rect.width + 'px';
+  canvas.style.height = '220px';
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width;
+  const H = 220;
+  const padL = 54, padR = 20, padT = 20, padB = 30;
+  const cW = W - padL - padR;
+  const cH = H - padT - padB;
+
+  const data = buildEquityData();
+  equityChartData = data;
+
+  // Summary labels
+  const initBal = data[0]?.balance || 0;
+  const curBal  = data.length > 1 ? data[data.length-1].balance : initBal;
+  const retPct  = initBal > 0 ? (((curBal - initBal) / initBal) * 100).toFixed(2) : '0.00';
+  const retDir  = curBal >= initBal ? '+' : '';
+  document.getElementById('equityCurrentBal').textContent = '$' + curBal.toFixed(2);
+  document.getElementById('equityReturn').textContent = retDir + retPct + '%';
+  document.getElementById('equityReturn').style.color = curBal >= initBal ? 'var(--green)' : 'var(--red)';
+  document.getElementById('equityStartBal').textContent = `Balance awal: $${initBal.toFixed(2)}`;
+
+  // Clear
+  ctx.clearRect(0, 0, W, H);
+
+  if (data.length < 2) {
+    ctx.fillStyle = '#3d5068';
+    ctx.font = '13px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Belum cukup data. Tambahkan beberapa trade dulu.', W/2, H/2);
+    return;
+  }
+
+  const vals    = data.map(d => d.balance);
+  const minVal  = Math.min(...vals);
+  const maxVal  = Math.max(...vals);
+  const range   = maxVal - minVal || 1;
+  const padding = range * 0.1;
+  const lo = minVal - padding;
+  const hi = maxVal + padding;
+
+  const toX = i => padL + (i / (data.length - 1)) * cW;
+  const toY = v => padT + cH - ((v - lo) / (hi - lo)) * cH;
+
+  // Grid lines
+  ctx.strokeStyle = '#1e2d3d';
+  ctx.lineWidth = 1;
+  for (let g = 0; g <= 4; g++) {
+    const y = padT + (g / 4) * cH;
+    ctx.beginPath();
+    ctx.moveTo(padL, y);
+    ctx.lineTo(padL + cW, y);
+    ctx.stroke();
+    const val = hi - (g / 4) * (hi - lo);
+    ctx.fillStyle = '#3d5068';
+    ctx.font = '10px DM Mono, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('$' + val.toFixed(0), padL - 6, y + 3);
+  }
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, padT, 0, padT + cH);
+  const isUp = curBal >= initBal;
+  grad.addColorStop(0, isUp ? 'rgba(62,207,142,0.25)' : 'rgba(240,98,108,0.22)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(data[0].balance));
+  for (let i = 1; i < data.length; i++) {
+    const x0 = toX(i-1), y0 = toY(data[i-1].balance);
+    const x1 = toX(i),   y1 = toY(data[i].balance);
+    const cpx = (x0 + x1) / 2;
+    ctx.bezierCurveTo(cpx, y0, cpx, y1, x1, y1);
+  }
+  ctx.lineTo(toX(data.length-1), padT + cH);
+  ctx.lineTo(toX(0), padT + cH);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(data[0].balance));
+  for (let i = 1; i < data.length; i++) {
+    const x0 = toX(i-1), y0 = toY(data[i-1].balance);
+    const x1 = toX(i),   y1 = toY(data[i].balance);
+    const cpx = (x0 + x1) / 2;
+    ctx.bezierCurveTo(cpx, y0, cpx, y1, x1, y1);
+  }
+  ctx.strokeStyle = isUp ? '#3ecf8e' : '#f0626c';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Dots
+  data.forEach((d, i) => {
+    ctx.beginPath();
+    ctx.arc(toX(i), toY(d.balance), 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = isUp ? '#3ecf8e' : '#f0626c';
+    ctx.fill();
+  });
+
+  // Last dot bigger with glow
+  ctx.shadowBlur = 12;
+  ctx.shadowColor = isUp ? '#3ecf8e' : '#f0626c';
+  ctx.beginPath();
+  ctx.arc(toX(data.length-1), toY(data[data.length-1].balance), 6, 0, Math.PI * 2);
+  ctx.fillStyle = isUp ? '#3ecf8e' : '#f0626c';
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('page-performance').classList.contains('active')) drawEquityChart();
+});
+
+// ===== Checklist =====
+function toggleCheck(item) {
+  const box  = item.querySelector('.check-box');
+  const text = item.querySelector('.check-text');
+  box.classList.toggle('checked');
+  text.classList.toggle('checked-text');
+  updateCheckScore();
+}
+
+function updateCheckScore() {
+  const all     = document.querySelectorAll('.check-box');
+  const checked = document.querySelectorAll('.check-box.checked').length;
+  const total   = all.length;
+  document.getElementById('checkScoreVal').textContent = checked + ' / ' + total;
+  const pct = checked / total;
+  let msg = '', color = 'var(--accent)';
+  if (checked === 0)    { msg = 'Belum ada yang dicentang.'; color = 'var(--text-muted)'; }
+  else if (pct < 0.5)   { msg = 'Persiapan masih kurang. Review ulang dulu.'; color = 'var(--red)'; }
+  else if (pct < 0.85)  { msg = 'Hampir siap. Perhatikan yang belum tercentang.'; color = 'var(--accent)'; }
+  else if (pct < 1)     { msg = 'Hampir sempurna. Sedikit lagi!'; color = 'var(--blue)'; }
+  else                  { msg = 'Semua terpenuhi. Siap untuk entry!'; color = 'var(--green)'; }
+  document.getElementById('checkScoreVal').style.color = color;
+  document.getElementById('checkScoreMsg').textContent = msg;
+  document.getElementById('checkScoreMsg').style.color = color;
+}
+
+function resetChecklist() {
+  document.querySelectorAll('.check-box').forEach(b => b.classList.remove('checked'));
+  document.querySelectorAll('.check-text').forEach(t => t.classList.remove('checked-text'));
+  updateCheckScore();
+}
+
+// ===== Toast =====
+function showToast(msg, isError = false) {
+  const toast     = document.getElementById('toast');
+  const toastMsg  = document.getElementById('toastMsg');
+  const toastIcon = document.getElementById('toastIcon');
+  toastMsg.textContent = msg;
+  toastIcon.textContent = isError ? '!' : '✓';
+  toast.className = 'toast' + (isError ? ' error' : '');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ===== Init =====
+checkSetup();
+applyProfile();
+updateDashboard();
+</script>
+
+</body>
+</html>
