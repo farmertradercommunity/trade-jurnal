@@ -889,14 +889,274 @@
     font-family: var(--font-body);
   }
 
+  /* ===== BOTTOM NAV MOBILE ===== */
+  .bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(13,17,23,0.97);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    z-index: 200;
+    padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .bottom-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .bnav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+    min-width: 48px;
+  }
+
+  .bnav-btn .bnav-icon {
+    font-size: 18px;
+    line-height: 1;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+
+  .bnav-btn .bnav-label {
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  .bnav-btn.active .bnav-icon,
+  .bnav-btn.active .bnav-label {
+    color: var(--accent);
+  }
+
+  .bnav-btn:active { transform: scale(0.9); }
+
+  /* ===== SETTINGS MODAL ===== */
+  .settings-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,11,15,0.85);
+    backdrop-filter: blur(16px);
+    z-index: 600;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .settings-overlay.open {
+    display: flex;
+  }
+
+  .settings-sheet {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 28px 24px calc(28px + env(safe-area-inset-bottom));
+    animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .settings-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--border-glow);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  .settings-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+
+  .settings-title span { color: var(--accent); }
+
+  .settings-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 20px;
+  }
+
+  .checklist-edit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+  }
+
+  .checklist-edit-item:last-child { border-bottom: none; }
+
+  .checklist-edit-input {
+    flex: 1;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .checklist-edit-input:focus { border-color: var(--accent); }
+
+  .del-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--red-dim);
+    background: transparent;
+    color: var(--red);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .del-btn:hover { background: var(--red-dim); }
+
+  .add-item-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px dashed var(--border-glow);
+    background: transparent;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+  }
+
+  .add-item-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .settings-save-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #080b0f;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.2s;
+  }
+
+  .settings-save-btn:hover { opacity: 0.9; }
+
+  .settings-cancel-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+
+  .settings-cancel-btn:hover { border-color: var(--border-glow); color: var(--text-primary); }
+
+  /* Settings button in topbar */
+  .settings-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 16px;
+  }
+
+  .settings-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
   /* Mobile responsive */
   @media (max-width: 700px) {
     .stat-grid { grid-template-columns: repeat(2, 1fr); }
-    .form-grid, .form-grid.three, .form-grid.four { grid-template-columns: 1fr 1fr; }
-    .calc-grid, .session-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid.three { grid-template-columns: 1fr 1fr; }
+    .form-grid.four { grid-template-columns: 1fr 1fr; }
+    .calc-grid { grid-template-columns: repeat(3, 1fr); }
+    .session-grid { grid-template-columns: repeat(2, 1fr) !important; }
     .perf-row { grid-template-columns: 1fr; }
     .nav-tabs { display: none; }
-    .hero-title { font-size: 24px; }
+    .hero-title { font-size: 22px; }
+    .hero-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .bottom-nav { display: block; }
+    .page { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+    .container { padding: 0 16px; }
+    .page { padding-top: 20px; }
+    .topbar-inner { padding: 0 16px; }
+    .form-card { padding: 16px; }
+    .stat-card { padding: 14px 16px; }
+    .stat-value { font-size: 22px; }
+    .direction-toggle { grid-template-columns: 1fr 1fr; }
+    .outcome-grid { grid-template-columns: repeat(3, 1fr); }
+    .win-ring-wrap { gap: 14px; }
+    .toast { bottom: calc(90px + env(safe-area-inset-bottom)); right: 16px; left: 16px; }
+    .session-grid { margin-bottom: 8px; }
+    /* Table scroll on mobile */
+    .trade-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    /* Quick actions grid */
+    #page-dashboard .container > div:last-child { grid-template-columns: 1fr !important; }
+  }
+
+  @media (max-width: 400px) {
+    .stat-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid.four { grid-template-columns: 1fr 1fr; }
+    .calc-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .hero-title { font-size: 20px; }
   }
 
   /* Animated entrance */
@@ -1026,7 +1286,18 @@
     color: var(--text-muted);
   }
 
-  .streak-badge {
+  /* Pair selector cascading */
+  #pairSelectorWrap .field-select { margin-bottom: 0; }
+
+  /* Validation error shake */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%,60% { transform: translateX(-4px); }
+    40%,80% { transform: translateX(4px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+
+  /* Streak badge */
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1071,7 +1342,7 @@
 
     <div class="field-group" style="margin-bottom:24px;">
       <div class="field-label">Broker / Platform</div>
-      <input type="text" class="field-input" id="setupBroker" placeholder="Contoh: IC Markets, Exness, dll" autocomplete="off">
+      <input type="text" class="field-input" id="setupBroker" placeholder="Contoh: Markets4you, Valetax, Exclusive Markets dll" autocomplete="off">
     </div>
 
     <button class="modal-btn" onclick="saveSetup()">MULAI JURNAL →</button>
@@ -1118,10 +1389,63 @@
       <button class="nav-tab" onclick="switchPage('calendar')">Eco Calendar</button>
       <button class="nav-tab" onclick="switchPage('checklist')">Pre-Trade</button>
     </nav>
+    <button class="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
   </div>
 </div>
 
-<!-- ============ DASHBOARD PAGE ============ -->
+<!-- Bottom Nav Mobile -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-btn active" onclick="switchPage('dashboard')" data-page="dashboard">
+      <span class="bnav-icon">⬡</span>
+      <span class="bnav-label">Home</span>
+    </button>
+    <button class="bnav-btn" onclick="switchPage('entry')" data-page="entry">
+      <span class="bnav-icon">+</span>
+      <span class="bnav-label">Entry</span>
+    </button>
+    <button class="bnav-btn" onclick="switchPage('log')" data-page="log">
+      <span class="bnav-icon">☰</span>
+      <span class="bnav-label">Log</span>
+    </button>
+    <button class="bnav-btn" onclick="switchPage('performance')" data-page="performance">
+      <span class="bnav-icon">↗</span>
+      <span class="bnav-label">Performa</span>
+    </button>
+    <button class="bnav-btn" onclick="switchPage('checklist')" data-page="checklist">
+      <span class="bnav-icon">✓</span>
+      <span class="bnav-label">Checklist</span>
+    </button>
+    <button class="bnav-btn" onclick="openSettings()">
+      <span class="bnav-icon">⚙</span>
+      <span class="bnav-label">Settings</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Settings Modal -->
+<div class="settings-overlay" id="settingsOverlay" onclick="handleOverlayClick(event)">
+  <div class="settings-sheet" id="settingsSheet">
+    <div class="settings-handle"></div>
+    <div class="settings-title">⚙ <span>Settings</span> Checklist</div>
+    <div class="settings-sub">// edit item Pre-Trade Checklist — Market Analysis</div>
+
+    <div style="font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px;">
+      📊 Market Analysis Items
+    </div>
+
+    <div id="settingsChecklistItems">
+      <!-- dynamically rendered -->
+    </div>
+
+    <button class="add-item-btn" onclick="addChecklistSettingItem()">+ Tambah Item Baru</button>
+
+    <button class="settings-save-btn" onclick="saveChecklistSettings()">SIMPAN PERUBAHAN →</button>
+    <button class="settings-cancel-btn" onclick="closeSettings()">Batal</button>
+  </div>
+</div>
+
+
 <div class="page active" id="page-dashboard">
   <div class="container">
 
@@ -1230,15 +1554,22 @@
         </div>
         <div class="field-group">
           <div class="field-label">Pair <span class="req">*</span></div>
-          <select class="field-select" id="fPair">
-            <option value="">Pilih pair</option>
-            <option>XAU/USD</option>
-            <option>GBP/USD</option>
-            <option>EUR/USD</option>
-            <option>USD/JPY</option>
-            <option>GBP/JPY</option>
-            <option>BTC/USD</option>
-          </select>
+          <div id="pairSelectorWrap">
+            <select class="field-select" id="fPairCategory" onchange="onCategoryChange()">
+              <option value="">Pilih Kategori</option>
+              <option value="forex">📈 Forex</option>
+              <option value="commodity">🥇 Commodity</option>
+              <option value="index">📊 Index</option>
+              <option value="crypto">₿ Crypto</option>
+            </select>
+            <select class="field-select" id="fPair" style="margin-top:8px;display:none;" onchange="onPairChange()">
+              <option value="">Pilih Pair</option>
+            </select>
+            <div id="fPairDisplay" style="display:none;background:var(--bg-input);border:1px solid var(--accent);border-radius:10px;padding:11px 14px;font-family:var(--font-mono);font-size:14px;color:var(--accent);margin-top:8px;cursor:pointer;" onclick="resetPairSelector()">
+              <span id="fPairDisplayText"></span> <span style="float:right;font-size:11px;color:var(--text-muted);">✕ ganti</span>
+            </div>
+          </div>
+          <input type="hidden" id="fPairValue">
         </div>
         <div class="field-group">
           <div class="field-label">Lot Size <span class="req">*</span></div>
@@ -1315,9 +1646,9 @@
           <input type="number" class="field-input" id="fExit" placeholder="0.00000" step="0.00001" oninput="calcClose()">
         </div>
         <div class="field-group">
-          <div class="field-label">Profit/Loss ($) <span style="color:var(--green);font-size:10px;font-family:var(--font-mono);">✦ isi manual</span></div>
-          <input type="number" class="field-input" id="fPnl" placeholder="contoh: +100.50 atau -45.20" oninput="onPnlChange()">
-          <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:3px;">Isi sesuai P&L di platform (MT4/MT5). Balance akan otomatis terhitung.</div>
+          <div class="field-label">Profit/Loss ($) <span style="color:var(--green);font-size:10px;font-family:var(--font-mono);">✦ otomatis</span></div>
+          <input type="number" class="field-input" id="fPnl" placeholder="otomatis terhitung" step="0.01" oninput="onPnlChange()" style="color:var(--accent);">
+          <div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:3px;">Terisi otomatis saat isi Harga Exit. Bisa diedit manual jika perlu.</div>
         </div>
         <div class="field-group">
           <div class="field-label">Balance Setelah <span style="color:var(--accent);font-size:10px;font-family:var(--font-mono);">✦ otomatis</span></div>
@@ -1551,28 +1882,21 @@
       </div>
     </div>
 
-    <!--  Calendar embed — official Investing.com widget -->
+    <!--  Calendar embed — medium + high impact, WIB timezone -->
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
       <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
         <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);"></div>
-        <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);">Economic Calendar — <span style="color:var(--accent)">Medium</span> + <span style="color:var(--red)">High Impact</span> — Sumber: <span style="color:var(--accent)">Investing.com</span></div>
+        <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);">Economic Calendar — <span style="color:var(--accent)">Medium</span> + <span style="color:var(--red)">High Impact</span> — Timezone: WIB (UTC+7)</div>
       </div>
-      <!-- Official Investing.com Economic Calendar Widget -->
-      <div style="padding:0;background:#111820;">
-        <iframe
-          src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone,filters&countries=5,22,17,6,26,37,10,72,35,43,14,8&calType=week&timeZone=23&lang=1"
-          width="100%"
-          height="680"
-          frameborder="0"
-          allowtransparency="true"
-          marginwidth="0"
-          marginheight="0"
-          style="display:block;background:#111820;"
-        ></iframe>
-        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-align:right;padding:6px 14px;">
-          Powered by <a href="https://www.investing.com/" target="_blank" style="color:var(--accent);text-decoration:none;">Investing.com</a>
-        </div>
-      </div>
+      <iframe
+        src="https://www.investing.com/economic-calendar?lang=en&timezone=7&impact=2,3"
+        width="100%"
+        height="700"
+        frameborder="0"
+        scrolling="yes"
+        allowtransparency="true"
+        style="display:block;background:#0d1117;"
+      ></iframe>
     </div>
 
     <!-- Tips -->
@@ -1625,12 +1949,13 @@
         <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Kondisi emosi stabil — tidak trading karena FOMO atau revenge</div></div>
         <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Sudah istirahat cukup dan tidak tergesa-gesa</div></div>
         <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Siap menerima hasil apapun (win atau loss) tanpa emosi berlebih</div></div>
+        <div class="checklist-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Tidak sedang sedih, gelisah, ataupun tekanan amarah</div></div>
       </div>
     </div>
 
     <div id="checkScore" style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;">
       <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);margin-bottom:8px;">CHECKLIST SCORE</div>
-      <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--accent)" id="checkScoreVal">0 / 12</div>
+      <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--accent)" id="checkScoreVal">0 / 13</div>
       <div style="font-size:13px;color:var(--text-secondary);margin-top:6px;" id="checkScoreMsg">Belum ada yang dicentang.</div>
       <button onclick="resetChecklist()" style="margin-top:16px;background:transparent;border:1px solid var(--border);color:var(--text-secondary);border-radius:8px;padding:8px 20px;font-size:13px;cursor:pointer;font-family:var(--font-body);">Reset Checklist</button>
     </div>
@@ -1689,7 +2014,12 @@ function switchPage(id) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   const tabs = ['dashboard','entry','log','performance','calendar','checklist'];
-  document.querySelectorAll('.nav-tab')[tabs.indexOf(id)].classList.add('active');
+  const tabIdx = tabs.indexOf(id);
+  if (tabIdx >= 0) document.querySelectorAll('.nav-tab')[tabIdx].classList.add('active');
+  // Bottom nav
+  document.querySelectorAll('.bnav-btn[data-page]').forEach(b => b.classList.remove('active'));
+  const bnav = document.querySelector(`.bnav-btn[data-page="${id}"]`);
+  if (bnav) bnav.classList.add('active');
   if (id === 'dashboard') updateDashboard();
   if (id === 'log') renderLog('All');
   if (id === 'performance') { updatePerformance(); drawEquityChart(); }
@@ -1711,6 +2041,8 @@ function setDirection(dir) {
   direction = dir;
   document.getElementById('btnBuy').classList.toggle('active', dir === 'BUY');
   document.getElementById('btnSell').classList.toggle('active', dir === 'SELL');
+  calcRR();
+  calcClose(); // recalc pips & P&L saat arah berubah
 }
 
 // ===== Emotion =====
@@ -1744,19 +2076,21 @@ function calcRR() {
   }
 }
 
-// ===== P&L change → auto-fill balance =====
+// ===== P&L sekarang otomatis dari calcClose =====
+// onPnlChange tetap ada untuk override manual jika user ingin edit
 function onPnlChange() {
   const pnl = parseFloat(document.getElementById('fPnl').value);
   if (isNaN(pnl)) {
     document.getElementById('fBalance').value = '';
-    calcClose();
     return;
   }
-  // Get latest balance: last trade's balance OR userProfile initial balance
   const prevBalance = getLatestBalance();
   const newBalance = prevBalance + pnl;
   document.getElementById('fBalance').value = newBalance.toFixed(2);
-  calcClose();
+  // recalc % balance
+  const pct = prevBalance > 0 ? ((pnl / prevBalance) * 100).toFixed(2) : '—';
+  document.getElementById('calcPct').textContent = pct !== '—' ? pct + '%' : '—';
+  document.getElementById('calcPct').style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
 }
 
 function getLatestBalance() {
@@ -1767,34 +2101,154 @@ function getLatestBalance() {
   return userProfile ? userProfile.initialBalance : 0;
 }
 
+// ===== Pip calculation per pair type =====
+const PAIR_DATA = {
+  forex: {
+    pairs: ['EUR/USD','GBP/USD','USD/JPY','GBP/JPY','USD/CAD','AUD/USD','NZD/USD','EUR/GBP',
+            'EUR/JPY','AUD/JPY','USD/CHF','EUR/CHF','CAD/JPY','GBP/CAD','EUR/AUD'],
+    pipFactor: (pair) => pair.includes('JPY') ? 100 : 10000
+  },
+  commodity: {
+    pairs: ['XAU/USD','XAG/USD'],
+    pipFactor: (pair) => pair === 'XAU/USD' ? 10 : 100
+  },
+  index: {
+    pairs: ['US30','NASDAQ','USOIL'],
+    pipFactor: (pair) => 1
+  },
+  crypto: {
+    pairs: ['BTC/USD','DOGE/USD','SOL/USD','TRX/USD'],
+    pipFactor: (pair) => pair === 'BTC/USD' ? 1 : 10000
+  }
+};
+
+// Pip value per 1 lot (standar) dalam USD
+// Rumus P&L = pips × pipValue × lot
+function getPipValuePerLot(pair) {
+  const pipValues = {
+    // Forex non-JPY: pip = 0.0001, lot = 100000 unit → $10/pip
+    'EUR/USD': 10, 'GBP/USD': 10, 'AUD/USD': 10, 'NZD/USD': 10,
+    'EUR/GBP': 10, 'GBP/CAD': 10, 'EUR/AUD': 10,
+    // Forex JPY: pip = 0.01, lot = 100000 → pip value ≈ $9 (approx, pakai 9.3 umum)
+    'USD/JPY': 9.3, 'USD/CAD': 10, 'USD/CHF': 10,
+    'GBP/JPY': 9.3, 'EUR/JPY': 9.3, 'AUD/JPY': 9.3,
+    'CAD/JPY': 9.3, 'EUR/CHF': 10,
+    // Commodity
+    'XAU/USD': 1,   // Gold: 1 pip (0.1) = $1 per 0.01 lot, $100 per 1 lot standar
+    'XAG/USD': 0.5,
+    // Index: per point per lot
+    'US30': 1, 'NASDAQ': 1, 'USOIL': 1,
+    // Crypto
+    'BTC/USD': 1, 'DOGE/USD': 1, 'SOL/USD': 1, 'TRX/USD': 1,
+  };
+  return pipValues[pair] || 10;
+}
+
+function getPipFactor(pair) {
+  for (const cat of Object.values(PAIR_DATA)) {
+    if (cat.pairs.includes(pair)) return cat.pipFactor(pair);
+  }
+  return 10000;
+}
+
+// Hitung P&L otomatis dari entry, exit, lot, pair, direction
+function calcAutoPnl(entry, exit, lot, pair, dir) {
+  if (!entry || !exit || !lot || !pair || !dir) return null;
+  const pipFactor  = getPipFactor(pair);
+  const pipValLot  = getPipValuePerLot(pair);
+  const rawDiff    = dir === 'SELL' ? (entry - exit) : (exit - entry);
+  const pips       = rawDiff * pipFactor;
+  // P&L = pips × (pipValue per lot) × lot
+  const pnl = pips * pipValLot * lot;
+  return parseFloat(pnl.toFixed(2));
+}
+
+const CATEGORY_LABELS = {
+  forex: '📈 Forex', commodity: '🥇 Commodity', index: '📊 Index', crypto: '₿ Crypto'
+};
+
+function onCategoryChange() {
+  const cat = document.getElementById('fPairCategory').value;
+  const pairSel = document.getElementById('fPair');
+  if (!cat) { pairSel.style.display = 'none'; return; }
+  const pairs = PAIR_DATA[cat].pairs;
+  pairSel.innerHTML = `<option value="">Pilih Pair (${CATEGORY_LABELS[cat]})</option>` +
+    pairs.map(p => `<option value="${p}">${p}</option>`).join('');
+  pairSel.style.display = 'block';
+  document.getElementById('fPairValue').value = '';
+}
+
+function onPairChange() {
+  const pair = document.getElementById('fPair').value;
+  if (!pair) return;
+  document.getElementById('fPairValue').value = pair;
+  document.getElementById('fPairDisplay').style.display = 'block';
+  document.getElementById('fPairDisplayText').textContent = pair;
+  document.getElementById('fPair').style.display = 'none';
+  document.getElementById('fPairCategory').style.display = 'none';
+  calcRR(); calcClose();
+}
+
+function resetPairSelector() {
+  document.getElementById('fPairValue').value = '';
+  document.getElementById('fPairCategory').value = '';
+  document.getElementById('fPairCategory').style.display = 'block';
+  document.getElementById('fPair').style.display = 'none';
+  document.getElementById('fPairDisplay').style.display = 'none';
+  document.getElementById('fPair').innerHTML = '<option value="">Pilih Pair</option>';
+}
+
 // ===== Auto-calc on close =====
 function calcClose() {
-  const entry = parseFloat(document.getElementById('fEntry').value);
-  const sl    = parseFloat(document.getElementById('fSL').value);
-  const exit  = parseFloat(document.getElementById('fExit').value);
-  const pnl   = parseFloat(document.getElementById('fPnl').value);
-  const bal   = parseFloat(document.getElementById('fBalance').value);
+  const entry  = parseFloat(document.getElementById('fEntry').value);
+  const sl     = parseFloat(document.getElementById('fSL').value);
+  const exit   = parseFloat(document.getElementById('fExit').value);
+  const lot    = parseFloat(document.getElementById('fLot').value);
+  const pair   = document.getElementById('fPairValue').value;
+  const pipFactor = getPipFactor(pair);
 
+  // ── PIPS ──────────────────────────────────────────────────
+  let pipsNum = null;
   if (entry && exit) {
-    const pips = ((exit - entry) * 10000).toFixed(1);
-    document.getElementById('calcPips').textContent = pips > 0 ? '+' + pips : pips;
-    document.getElementById('calcPips').style.color = pips > 0 ? 'var(--green)' : 'var(--red)';
+    const rawDiff = direction === 'SELL' ? (entry - exit) : (exit - entry);
+    pipsNum = parseFloat((rawDiff * pipFactor).toFixed(1));
+    document.getElementById('calcPips').textContent = pipsNum > 0 ? '+' + pipsNum : String(pipsNum);
+    document.getElementById('calcPips').style.color = pipsNum > 0 ? 'var(--green)' : pipsNum < 0 ? 'var(--red)' : 'var(--accent)';
+  } else {
+    document.getElementById('calcPips').textContent = '—';
+    document.getElementById('calcPips').style.color = 'var(--accent)';
   }
 
-  if (entry && sl && exit) {
-    const risk = Math.abs(entry - sl);
-    const actual = Math.abs(exit - entry);
-    if (risk > 0) {
-      const rr = (actual / risk).toFixed(2);
-      document.getElementById('calcRRActual').textContent = '1 : ' + rr;
+  // ── AUTO P&L ──────────────────────────────────────────────
+  if (entry && exit && lot && pair && direction) {
+    const autoPnl = calcAutoPnl(entry, exit, lot, pair, direction);
+    if (autoPnl !== null) {
+      document.getElementById('fPnl').value = autoPnl.toFixed(2);
+      // Auto balance
+      const prevBalance = getLatestBalance();
+      const newBalance  = prevBalance + autoPnl;
+      document.getElementById('fBalance').value = newBalance.toFixed(2);
+      // % balance
+      const pct = prevBalance > 0 ? ((autoPnl / prevBalance) * 100).toFixed(2) : '—';
+      document.getElementById('calcPct').textContent = pct !== '—' ? pct + '%' : '—';
+      document.getElementById('calcPct').style.color = autoPnl >= 0 ? 'var(--green)' : 'var(--red)';
     }
   }
 
-  if (pnl && bal) {
-    const prevBal = bal - pnl;
-    const pct = prevBal > 0 ? ((pnl / prevBal) * 100).toFixed(2) : '—';
-    document.getElementById('calcPct').textContent = pct !== '—' ? pct + '%' : '—';
-    document.getElementById('calcPct').style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+  // ── RR AKTUAL (direction-aware) ───────────────────────────
+  if (entry && sl && exit) {
+    // Risk = jarak entry ke SL (selalu positif)
+    const riskDist = Math.abs(entry - sl);
+    // Reward = pergerakan ke arah yang benar
+    const rewardDist = direction === 'SELL' ? (entry - exit) : (exit - entry);
+    if (riskDist > 0) {
+      const rr = (rewardDist / riskDist).toFixed(2);
+      document.getElementById('calcRRActual').textContent = '1 : ' + rr;
+      document.getElementById('calcRRActual').style.color = rewardDist >= 0 ? 'var(--green)' : 'var(--red)';
+    }
+  } else {
+    document.getElementById('calcRRActual').textContent = '—';
+    document.getElementById('calcRRActual').style.color = 'var(--accent)';
   }
 }
 
@@ -1802,26 +2256,50 @@ function calcClose() {
 function saveTrade() {
   const date    = document.getElementById('fDate').value;
   const session = document.getElementById('fSession').value;
-  const pair    = document.getElementById('fPair').value;
+  const pair    = document.getElementById('fPairValue').value;
   const lot     = document.getElementById('fLot').value;
   const entry   = document.getElementById('fEntry').value;
   const sl      = document.getElementById('fSL').value;
   const tp      = document.getElementById('fTP').value;
+  const exit    = document.getElementById('fExit').value;
+  const pnlRaw  = document.getElementById('fPnl').value;
+  const reason  = document.getElementById('fReason').value.trim();
 
-  if (!date || !session || !pair || !lot || !entry || !sl || !tp || !direction) {
-    showToast('Lengkapi field wajib terlebih dahulu', true);
+  // ===== VALIDASI LENGKAP =====
+  const errors = [];
+  if (!date)      errors.push('Tanggal');
+  if (!session)   errors.push('Session');
+  if (!pair)      errors.push('Pair');
+  if (!lot)       errors.push('Lot Size');
+  if (!direction) errors.push('Arah Posisi (BUY/SELL)');
+  if (!entry)     errors.push('Harga Entry');
+  if (!sl)        errors.push('Stop Loss');
+  if (!tp)        errors.push('Take Profit');
+  if (!exit)      errors.push('Harga Exit');
+  if (!outcome)   errors.push('Hasil Trade (WIN/LOSS/BE)');
+  if (!emotion)   errors.push('Kondisi Emosional saat entry');
+  if (!reason)    errors.push('Alasan Entry');
+
+  if (errors.length > 0) {
+    showToast('⚠ Belum lengkap: ' + errors.slice(0,2).join(', ') + (errors.length > 2 ? ` (+${errors.length-2} lagi)` : ''), true);
+    // highlight missing fields
+    highlightMissing({ date, session, pair, lot, entry, sl, tp, exit, pnlRaw, reason, outcome, emotion, direction });
     return;
   }
 
-  const exit    = document.getElementById('fExit').value;
-  const pnl     = parseFloat(document.getElementById('fPnl').value) || 0;
-  const balance = parseFloat(document.getElementById('fBalance').value) || 0;
-  const reason  = document.getElementById('fReason').value;
+  // P&L: pakai nilai di field (sudah otomatis dari calcClose), atau hitung ulang jika kosong
+  let pnl = parseFloat(document.getElementById('fPnl').value);
+  if (isNaN(pnl)) {
+    pnl = calcAutoPnl(parseFloat(entry), parseFloat(exit), parseFloat(lot), pair, direction) || 0;
+  }
+  const balance = parseFloat(document.getElementById('fBalance').value) || (getLatestBalance() + pnl);
   const notes   = document.getElementById('fNotes').value;
+  const pipFactor = getPipFactor(pair);
 
   const e = parseFloat(entry), ex = parseFloat(exit), s = parseFloat(sl);
-  const pips     = exit ? ((ex - e) * 10000).toFixed(1) : null;
-  const rrActual = (exit && sl) ? (Math.abs(ex - e) / Math.abs(e - s)).toFixed(2) : null;
+  const rawPips  = direction === 'SELL' ? (e - ex) : (ex - e);
+  const pips     = (rawPips * pipFactor).toFixed(1);
+  const rrActual = sl ? (Math.abs(ex - e) / Math.abs(e - s)).toFixed(2) : null;
   const rrPlan   = (sl && tp) ? (Math.abs(parseFloat(tp) - e) / Math.abs(e - s)).toFixed(2) : null;
   const prevBal  = balance - pnl;
   const pct      = (pnl && prevBal > 0) ? ((pnl / prevBal) * 100).toFixed(2) : null;
@@ -1831,7 +2309,7 @@ function saveTrade() {
     date, session, pair, lot: parseFloat(lot),
     direction, entry: parseFloat(entry),
     sl: parseFloat(sl), tp: parseFloat(tp),
-    exit: exit ? parseFloat(exit) : null,
+    exit: parseFloat(exit),
     pnl, balance, pips, rrPlan, rrActual, pct,
     emotion, outcome, reason, notes
   };
@@ -1843,8 +2321,52 @@ function saveTrade() {
   updateDashboard();
 }
 
+function highlightMissing(vals) {
+  const map = {
+    date: 'fDate', session: 'fSession', lot: 'fLot',
+    entry: 'fEntry', sl: 'fSL', tp: 'fTP', exit: 'fExit',
+    pnlRaw: 'fPnl', reason: 'fReason'
+  };
+  Object.entries(map).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (!vals[key] && vals[key] !== 0) {
+      el.style.borderColor = 'var(--red)';
+      el.style.boxShadow = '0 0 0 2px rgba(240,98,108,0.2)';
+      el.addEventListener('input', () => { el.style.borderColor=''; el.style.boxShadow=''; }, { once: true });
+    }
+  });
+  // Pair highlight
+  if (!vals.pair) {
+    const pc = document.getElementById('fPairCategory');
+    pc.style.borderColor = 'var(--red)';
+    pc.addEventListener('change', () => { pc.style.borderColor=''; }, { once: true });
+  }
+  // Emotion highlight
+  if (!vals.emotion) {
+    document.querySelectorAll('.emotion-btn').forEach(b => {
+      b.style.borderColor = 'var(--red)';
+      b.addEventListener('click', () => document.querySelectorAll('.emotion-btn').forEach(x => x.style.borderColor = ''), { once: true });
+    });
+  }
+  // Outcome highlight
+  if (!vals.outcome) {
+    document.querySelectorAll('.outcome-btn').forEach(b => {
+      b.style.borderColor = 'var(--red)';
+      b.addEventListener('click', () => document.querySelectorAll('.outcome-btn').forEach(x => x.style.borderColor = ''), { once: true });
+    });
+  }
+  // Direction highlight
+  if (!vals.direction) {
+    document.querySelectorAll('.dir-btn').forEach(b => {
+      b.style.borderColor = 'var(--red)';
+      b.addEventListener('click', () => document.querySelectorAll('.dir-btn').forEach(x => x.style.borderColor = ''), { once: true });
+    });
+  }
+}
+
 function resetForm() {
-  ['fDate','fSession','fPair','fLot','fEntry','fSL','fTP','fExit','fPnl','fBalance','fReason','fNotes'].forEach(id => {
+  ['fDate','fSession','fLot','fEntry','fSL','fTP','fExit','fPnl','fBalance','fReason','fNotes'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -1855,6 +2377,8 @@ function resetForm() {
   document.getElementById('calcRRActual').textContent = '—';
   document.getElementById('calcPct').textContent = '—';
   document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  // Reset pair selector
+  resetPairSelector();
 }
 
 // ===== Dashboard =====
@@ -2241,10 +2765,103 @@ function showToast(msg, isError = false) {
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
+// ===== Settings / Editable Market Analysis Checklist =====
+const DEFAULT_MARKET_ITEMS = [
+  'Sudah lihat Higher Timeframe (D1/W1) untuk bias keseluruhan',
+  'Sudah identifikasi level support & resistance utama',
+  'Sudah cek economic calendar — tidak ada news high impact 30 menit ke depan',
+  'Tren di 4H sesuai dengan arah entry yang akan diambil',
+  'Ada minimal 2 konfluens yang mendukung entry (FVG, OB, BOS, dll)'
+];
+
+function getMarketItems() {
+  const saved = localStorage.getItem('fcj_market_checklist');
+  return saved ? JSON.parse(saved) : [...DEFAULT_MARKET_ITEMS];
+}
+
+function saveMarketItems(items) {
+  localStorage.setItem('fcj_market_checklist', JSON.stringify(items));
+}
+
+function renderChecklist1() {
+  const items = getMarketItems();
+  const container = document.getElementById('checklist1');
+  container.innerHTML = items.map(txt => `
+    <div class="checklist-item" onclick="toggleCheck(this)">
+      <div class="check-box"></div>
+      <div class="check-text">${txt}</div>
+    </div>
+  `).join('');
+  updateCheckScore();
+}
+
+function openSettings() {
+  const items = getMarketItems();
+  renderSettingsItems(items);
+  document.getElementById('settingsOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSettings() {
+  document.getElementById('settingsOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('settingsOverlay')) closeSettings();
+}
+
+function renderSettingsItems(items) {
+  const container = document.getElementById('settingsChecklistItems');
+  container.innerHTML = items.map((txt, i) => `
+    <div class="checklist-edit-item" data-index="${i}">
+      <input class="checklist-edit-input" type="text" value="${escapeAttr(txt)}" placeholder="Masukkan item checklist...">
+      <button class="del-btn" onclick="deleteSettingItem(${i})" title="Hapus">✕</button>
+    </div>
+  `).join('');
+}
+
+function escapeAttr(str) {
+  return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function deleteSettingItem(idx) {
+  const items = getCurrentSettingsItems();
+  items.splice(idx, 1);
+  renderSettingsItems(items);
+}
+
+function addChecklistSettingItem() {
+  const items = getCurrentSettingsItems();
+  items.push('');
+  renderSettingsItems(items);
+  // focus last input
+  const inputs = document.querySelectorAll('.checklist-edit-input');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+}
+
+function getCurrentSettingsItems() {
+  return Array.from(document.querySelectorAll('.checklist-edit-input'))
+    .map(inp => inp.value.trim());
+}
+
+function saveChecklistSettings() {
+  const items = getCurrentSettingsItems().filter(t => t.length > 0);
+  if (items.length === 0) {
+    showToast('Minimal 1 item harus ada!', true);
+    return;
+  }
+  saveMarketItems(items);
+  renderChecklist1();
+  closeSettings();
+  showToast('Checklist Market Analysis berhasil diperbarui ✓');
+}
+
 // ===== Init =====
 checkSetup();
 applyProfile();
 updateDashboard();
+renderChecklist1();
 </script>
 
 </body>
