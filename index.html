@@ -889,7 +889,230 @@
     font-family: var(--font-body);
   }
 
-  /* ===== BOTTOM NAV MOBILE ===== */
+  /* ===== EXPORT MODAL ===== */
+  .export-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,11,15,0.85);
+    backdrop-filter: blur(16px);
+    z-index: 700;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .export-overlay.open { display: flex; }
+
+  .export-sheet {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px 24px calc(32px + env(safe-area-inset-bottom));
+    animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .export-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .export-title span { color: var(--accent); }
+
+  .export-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 24px;
+  }
+
+  .export-section-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .export-card {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .export-card:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .export-card:active { transform: scale(0.98); }
+
+  .export-card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .export-card-icon.json { background: rgba(91,156,246,0.15); }
+  .export-card-icon.csv  { background: rgba(62,207,142,0.15); }
+  .export-card-icon.html { background: rgba(232,184,109,0.15); }
+  .export-card-icon.imp  { background: rgba(155,120,255,0.15); }
+
+  .export-card-info { flex: 1; }
+
+  .export-card-name {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .export-card-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    line-height: 1.5;
+  }
+
+  .export-card-badge {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+
+  .badge-blue   { border-color: var(--blue); color: var(--blue); }
+  .badge-green  { border-color: var(--green); color: var(--green); }
+  .badge-accent { border-color: var(--accent); color: var(--accent); }
+  .badge-purple { border-color: #9b78ff; color: #9b78ff; }
+
+  .import-zone {
+    border: 2px dashed var(--border-glow);
+    border-radius: 14px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+    position: relative;
+  }
+
+  .import-zone:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+  .import-zone input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .import-zone-icon { font-size: 28px; margin-bottom: 8px; }
+
+  .import-zone-text {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .import-zone-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .export-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  .export-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .export-stat-box {
+    background: var(--bg-void);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  .export-stat-num {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .export-stat-lbl {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-top: 2px;
+  }
+
+  .export-close-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 14px;
+    transition: all 0.2s;
+  }
+
+  .export-close-btn:hover { border-color: var(--border-glow); color: var(--text-primary); }
+
+  .export-btn-topbar {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 15px;
+  }
+
+  .export-btn-topbar:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
   .bottom-nav {
     display: none;
     position: fixed;
@@ -1297,6 +1520,11 @@
   }
   .shake { animation: shake 0.4s ease; }
 
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
   /* Streak badge */
     display: inline-flex;
     align-items: center;
@@ -1342,32 +1570,117 @@
 
     <div class="field-group" style="margin-bottom:24px;">
       <div class="field-label">Broker / Platform</div>
-      <input type="text" class="field-input" id="setupBroker" placeholder="Contoh: Markets4you, Valetax, Exclusive Markets dll" autocomplete="off">
+      <input type="text" class="field-input" id="setupBroker" placeholder="Contoh: Markets4you, Valetax, Exclusive Markets, dll" autocomplete="off">
     </div>
 
     <button class="modal-btn" onclick="saveSetup()">MULAI JURNAL →</button>
   </div>
 </div>
 
-<!-- Ticker Bar -->
-<div class="ticker-bar">
-  <div class="ticker-inner" id="tickerContent">
-    <div class="ticker-item"><span class="ticker-pair">XAU/USD</span><span class="ticker-up">+0.42%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">GBP/USD</span><span class="ticker-down">-0.18%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">EUR/USD</span><span class="ticker-up">+0.09%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">USD/JPY</span><span class="ticker-down">-0.33%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">GBP/JPY</span><span class="ticker-up">+0.27%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">BTC/USD</span><span class="ticker-up">+1.84%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">SESSION</span><span style="color:var(--accent)">NEW YORK OPEN</span></div>
-    <div class="ticker-item"><span class="ticker-pair">XAU/USD</span><span class="ticker-up">+0.42%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">GBP/USD</span><span class="ticker-down">-0.18%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">EUR/USD</span><span class="ticker-up">+0.09%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">USD/JPY</span><span class="ticker-down">-0.33%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">GBP/JPY</span><span class="ticker-up">+0.27%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">BTC/USD</span><span class="ticker-up">+1.84%</span></div>
-    <div class="ticker-item"><span class="ticker-pair">SESSION</span><span style="color:var(--accent)">NEW YORK OPEN</span></div>
+<!-- Ticker Bar: TradingView Live + Session Badge -->
+<div class="ticker-bar" style="position:relative;height:44px;overflow:hidden;display:flex;align-items:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg-deep);">
+
+  <!-- Session Badge (kiri, overlay) -->
+  <div id="sessionBadge" style="
+    position:absolute; left:0; top:0; bottom:0; z-index:10;
+    display:flex; align-items:center;
+    padding: 0 14px 0 12px;
+    background: linear-gradient(90deg, var(--bg-deep) 70%, transparent);
+    pointer-events:none;
+    gap:6px;
+  ">
+    <span id="sessionDot" style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex-shrink:0;display:inline-block;animation:pulse 2s infinite;"></span>
+    <span id="sessionLabel" style="font-family:var(--font-mono);font-size:10px;font-weight:500;color:var(--accent);white-space:nowrap;letter-spacing:0.06em;"></span>
+  </div>
+
+  <!-- TradingView Ticker Tape Widget -->
+  <div style="flex:1;overflow:hidden;padding-left:130px;">
+    <div class="tradingview-widget-container" style="height:44px;">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+      {
+        "symbols": [
+          { "proName": "OANDA:XAUUSD",  "title": "Gold" },
+          { "proName": "FX:GBPUSD",     "title": "GBP/USD" },
+          { "proName": "FX:EURUSD",     "title": "EUR/USD" },
+          { "proName": "FX:USDJPY",     "title": "USD/JPY" },
+          { "proName": "FX:GBPJPY",     "title": "GBP/JPY" },
+          { "proName": "FX:USDCAD",     "title": "USD/CAD" },
+          { "proName": "FX:AUDUSD",     "title": "AUD/USD" },
+          { "proName": "OANDA:XAGUSD",  "title": "Silver" },
+          { "proName": "FOREXCOM:DJI",  "title": "US30" },
+          { "proName": "NASDAQ:QQQ",    "title": "NASDAQ" },
+          { "proName": "TVC:USOIL",     "title": "OIL" },
+          { "proName": "BINANCE:BTCUSDT","title": "BTC/USD" },
+          { "proName": "BINANCE:SOLUSDT","title": "SOL/USD" },
+          { "proName": "BINANCE:DOGEUSDT","title": "DOGE/USD" }
+        ],
+        "showSymbolLogo": false,
+        "isTransparent": true,
+        "displayMode": "compact",
+        "colorTheme": "dark",
+        "locale": "en"
+      }
+      </script>
+    </div>
   </div>
 </div>
+
+<script>
+// ── Auto Session Badge ──────────────────────────────────────
+// Semua sesi berdasarkan WIB (UTC+7)
+(function updateSessionBadge() {
+  const sessions = [
+    { name: 'SYDNEY OPEN',    start:  4, end:  9,  color: '#5b9cf6' },  // 04:00–09:00 WIB
+    { name: 'TOKYO OPEN',     start:  6, end: 13,  color: '#e8b86d' },  // 06:00–13:00 WIB (overlap Sydney)
+    { name: 'LONDON OPEN',    start: 14, end: 21,  color: '#3ecf8e' },  // 14:00–21:00 WIB
+    { name: 'NEW YORK OPEN',  start: 19, end:  3,  color: '#f0626c' },  // 19:00–03:00+1 WIB (wrap midnight)
+  ];
+
+  function getActiveSession() {
+    // Jam WIB = UTC + 7
+    const nowUtc = new Date();
+    const wibHour = (nowUtc.getUTCHours() + 7) % 24;
+    const wibMin  = nowUtc.getUTCMinutes();
+    const wibDecimal = wibHour + wibMin / 60;
+
+    let active = null;
+    for (const s of sessions) {
+      if (s.end > s.start) {
+        // Tidak wrap tengah malam
+        if (wibDecimal >= s.start && wibDecimal < s.end) active = s;
+      } else {
+        // Wrap tengah malam (contoh NY: 19–03)
+        if (wibDecimal >= s.start || wibDecimal < s.end) active = s;
+      }
+    }
+    return active;
+  }
+
+  function render() {
+    const s = getActiveSession();
+    const dot   = document.getElementById('sessionDot');
+    const label = document.getElementById('sessionLabel');
+    if (!dot || !label) return;
+    if (s) {
+      dot.style.background    = s.color;
+      dot.style.boxShadow     = '0 0 6px ' + s.color;
+      label.textContent       = s.name;
+      label.style.color       = s.color;
+    } else {
+      dot.style.background    = '#3d5068';
+      dot.style.boxShadow     = 'none';
+      label.textContent       = 'MARKET CLOSED';
+      label.style.color       = '#3d5068';
+    }
+  }
+
+  render();
+  // Update setiap menit
+  setInterval(render, 60000);
+})();
+</script>
+
 
 <!-- Topbar -->
 <div class="topbar">
@@ -1389,7 +1702,10 @@
       <button class="nav-tab" onclick="switchPage('calendar')">Eco Calendar</button>
       <button class="nav-tab" onclick="switchPage('checklist')">Pre-Trade</button>
     </nav>
-    <button class="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="export-btn-topbar" onclick="openExport()" title="Export / Import Data">⇅</button>
+      <button class="settings-btn" onclick="openSettings()" title="Settings">⚙</button>
+    </div>
   </div>
 </div>
 
@@ -1445,6 +1761,75 @@
   </div>
 </div>
 
+
+<!-- Export Modal -->
+<div class="export-overlay" id="exportOverlay" onclick="handleExportOverlayClick(event)">
+  <div class="export-sheet" id="exportSheet">
+    <div class="settings-handle"></div>
+    <div class="export-title">⇅ <span>Export</span> & Import</div>
+    <div class="export-sub">// simpan & pulihkan semua data jurnal kamu</div>
+
+    <!-- Stats snapshot -->
+    <div class="export-stats-row" id="exportStatsRow">
+      <div class="export-stat-box">
+        <div class="export-stat-num" id="expTotalTrades">0</div>
+        <div class="export-stat-lbl">Total Trade</div>
+      </div>
+      <div class="export-stat-box">
+        <div class="export-stat-num" id="expTotalPnl">$0</div>
+        <div class="export-stat-lbl">Total P&L</div>
+      </div>
+      <div class="export-stat-box">
+        <div class="export-stat-num" id="expLastDate">—</div>
+        <div class="export-stat-lbl">Trade Terakhir</div>
+      </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="export-section-label">📤 Export Data</div>
+
+    <div class="export-card" onclick="exportJSON()">
+      <div class="export-card-icon json">📦</div>
+      <div class="export-card-info">
+        <div class="export-card-name">Backup Lengkap (JSON)</div>
+        <div class="export-card-desc">Semua data: trades, profil, settings checklist.<br>Bisa di-import kembali kapan saja.</div>
+      </div>
+      <span class="export-card-badge badge-blue">Recommended</span>
+    </div>
+
+    <div class="export-card" onclick="exportCSV()">
+      <div class="export-card-icon csv">📊</div>
+      <div class="export-card-info">
+        <div class="export-card-name">Export CSV (Excel)</div>
+        <div class="export-card-desc">Data trade dalam format spreadsheet.<br>Bisa dibuka di Excel / Google Sheets.</div>
+      </div>
+      <span class="export-card-badge badge-green">Excel</span>
+    </div>
+
+    <div class="export-card" onclick="exportHTML()">
+      <div class="export-card-icon html">🌐</div>
+      <div class="export-card-info">
+        <div class="export-card-name">Export HTML (Snapshot)</div>
+        <div class="export-card-desc">Jurnal lengkap dengan data tertanam.<br>Bisa dibuka offline tanpa koneksi.</div>
+      </div>
+      <span class="export-card-badge badge-accent">Offline</span>
+    </div>
+
+    <div class="export-divider"></div>
+
+    <!-- Import Section -->
+    <div class="export-section-label">📥 Import / Pulihkan Data</div>
+
+    <div class="import-zone" id="importZone">
+      <input type="file" accept=".json" onchange="handleImport(event)" id="importFileInput">
+      <div class="import-zone-icon">📁</div>
+      <div class="import-zone-text">Pilih file backup (.json)</div>
+      <div class="import-zone-sub">Drag & drop atau klik untuk memilih file<br>⚠ Data yang ada akan digabung / ditimpa</div>
+    </div>
+
+    <button class="export-close-btn" onclick="closeExport()">Tutup</button>
+  </div>
+</div>
 
 <div class="page active" id="page-dashboard">
   <div class="container">
@@ -2855,6 +3240,152 @@ function saveChecklistSettings() {
   renderChecklist1();
   closeSettings();
   showToast('Checklist Market Analysis berhasil diperbarui ✓');
+}
+
+// ===== EXPORT & IMPORT =====
+
+function openExport() {
+  // Refresh stats
+  document.getElementById('expTotalTrades').textContent = trades.length;
+  const totalPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+  document.getElementById('expTotalPnl').textContent = (totalPnl >= 0 ? '+$' : '-$') + Math.abs(totalPnl).toFixed(2);
+  const lastDate = trades.length ? trades[0].date : '—';
+  document.getElementById('expLastDate').textContent = lastDate;
+  document.getElementById('exportOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExport() {
+  document.getElementById('exportOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleExportOverlayClick(e) {
+  if (e.target === document.getElementById('exportOverlay')) closeExport();
+}
+
+// ── JSON Backup ─────────────────────────────────────────────
+function exportJSON() {
+  const payload = {
+    _meta: {
+      app: 'Farmer Circle Journal',
+      version: '2.0',
+      exportedAt: new Date().toISOString(),
+      totalTrades: trades.length
+    },
+    userProfile,
+    trades,
+    marketChecklist: getMarketItems()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const ts   = new Date().toISOString().slice(0,10);
+  triggerDownload(blob, `FCJ_Backup_${ts}.json`);
+  showToast('✓ Backup JSON berhasil didownload');
+}
+
+// ── CSV Export ──────────────────────────────────────────────
+function exportCSV() {
+  if (!trades.length) { showToast('Belum ada data trade', true); return; }
+  const headers = [
+    'Tanggal','Session','Pair','Direction','Lot','Entry','SL','TP','Exit',
+    'Pips','RR Plan','RR Aktual','P&L ($)','Balance','% Balance',
+    'Hasil','Emosi','Alasan Entry','Catatan'
+  ];
+  const rows = trades.map(t => [
+    t.date, t.session, t.pair, t.direction, t.lot,
+    t.entry, t.sl, t.tp, t.exit,
+    t.pips || '', t.rrPlan || '', t.rrActual || '',
+    t.pnl, t.balance, t.pct ? t.pct + '%' : '',
+    t.outcome, t.emotion,
+    `"${(t.reason || '').replace(/"/g, '""')}"`,
+    `"${(t.notes  || '').replace(/"/g, '""')}"`
+  ]);
+  const csv  = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }); // BOM for Excel
+  const ts   = new Date().toISOString().slice(0,10);
+  triggerDownload(blob, `FCJ_Trades_${ts}.csv`);
+  showToast('✓ Export CSV berhasil didownload');
+}
+
+// ── HTML Snapshot Export ─────────────────────────────────────
+function exportHTML() {
+  const payload = {
+    _meta: { app: 'Farmer Circle Journal', exportedAt: new Date().toISOString() },
+    userProfile, trades,
+    marketChecklist: getMarketItems()
+  };
+  const src      = document.documentElement.outerHTML;
+  const injected = src.replace(
+    '</body>',
+    `<script>
+      (function() {
+        const d = ${JSON.stringify(payload)};
+        if (!localStorage.getItem('fcj_trades') && d.trades && d.trades.length) {
+          localStorage.setItem('fcj_trades', JSON.stringify(d.trades));
+          localStorage.setItem('fcj_profile', JSON.stringify(d.userProfile));
+          localStorage.setItem('fcj_market_checklist', JSON.stringify(d.marketChecklist));
+          location.reload();
+        }
+      })();
+    <\/script></body>`
+  );
+  const blob = new Blob([injected], { type: 'text/html;charset=utf-8' });
+  const ts   = new Date().toISOString().slice(0,10);
+  triggerDownload(blob, `FCJ_Snapshot_${ts}.html`);
+  showToast('✓ HTML snapshot berhasil didownload');
+}
+
+// ── Import / Restore ────────────────────────────────────────
+function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.trades || !Array.isArray(data.trades)) {
+        showToast('⚠ Format file tidak valid', true);
+        return;
+      }
+      // Merge: gabung dengan trades yg ada (skip duplikat by id)
+      const existingIds = new Set(trades.map(t => t.id));
+      const newTrades   = data.trades.filter(t => !existingIds.has(t.id));
+      const merged      = [...newTrades, ...trades]
+        .sort((a,b) => new Date(b.date) - new Date(a.date));
+
+      trades = merged;
+      localStorage.setItem('fcj_trades', JSON.stringify(trades));
+
+      if (data.userProfile) {
+        userProfile = data.userProfile;
+        localStorage.setItem('fcj_profile', JSON.stringify(userProfile));
+        applyProfile();
+      }
+      if (data.marketChecklist) {
+        saveMarketItems(data.marketChecklist);
+        renderChecklist1();
+      }
+
+      updateDashboard();
+      closeExport();
+      showToast(`✓ Import berhasil! ${newTrades.length} trade baru dimuat`);
+    } catch (err) {
+      showToast('⚠ Gagal membaca file: ' + err.message, true);
+    }
+    e.target.value = ''; // reset input
+  };
+  reader.readAsText(file);
+}
+
+// ── Helper ──────────────────────────────────────────────────
+function triggerDownload(blob, filename) {
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
 }
 
 // ===== Init =====
