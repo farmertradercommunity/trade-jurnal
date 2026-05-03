@@ -1117,48 +1117,72 @@
     display: none;
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background: rgba(13,17,23,0.97);
-    backdrop-filter: blur(20px);
+    background: rgba(8,11,15,0.97);
+    backdrop-filter: blur(24px);
     border-top: 1px solid var(--border);
     z-index: 200;
-    padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
   }
 
   .bottom-nav-inner {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: stretch;
+    gap: 2px;
   }
 
   .bnav-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
-    padding: 6px 10px;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
     border: none;
     background: transparent;
     cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.18s;
+    flex: 1;
+    height: 56px;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  .bnav-btn::before {
+    content: '';
+    position: absolute;
+    inset: 4px 6px;
     border-radius: 10px;
-    transition: all 0.2s;
-    min-width: 48px;
+    background: transparent;
+    transition: background 0.18s;
+  }
+
+  .bnav-btn.active::before {
+    background: var(--accent-dim);
   }
 
   .bnav-btn .bnav-icon {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1;
     color: var(--text-muted);
-    transition: color 0.2s;
+    transition: color 0.18s;
+    position: relative;
+    z-index: 1;
   }
 
   .bnav-btn .bnav-label {
     font-family: var(--font-body);
     font-size: 9px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-muted);
-    transition: color 0.2s;
+    transition: color 0.18s;
     white-space: nowrap;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
+    position: relative;
+    z-index: 1;
   }
 
   .bnav-btn.active .bnav-icon,
@@ -1166,7 +1190,8 @@
     color: var(--accent);
   }
 
-  .bnav-btn:active { transform: scale(0.9); }
+  .bnav-btn:active { transform: scale(0.93); }
+  .bnav-btn:active::before { background: var(--accent-dim); }
 
   /* ===== SETTINGS MODAL ===== */
   .settings-overlay {
@@ -1371,7 +1396,7 @@
     /* Table scroll on mobile */
     .trade-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     /* Quick actions grid */
-    #page-dashboard .container > div:last-child { grid-template-columns: 1fr !important; }
+    /* Quick actions auto-fit on mobile */
   }
 
   @media (max-width: 400px) {
@@ -1381,6 +1406,112 @@
     .calc-grid { grid-template-columns: 1fr 1fr 1fr; }
     .hero-title { font-size: 20px; }
   }
+
+  /* ===== MOBILE FIX: Touch events & tap targets ===== */
+  @media (max-width: 700px) {
+    .bnav-btn, .nav-tab, .dir-btn, .outcome-btn, .emotion-btn,
+    .filter-pill, .submit-btn, .modal-btn, .settings-btn,
+    .export-btn-topbar, .export-card, .checklist-item {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .bnav-btn {
+      height: 54px;
+      flex: 1;
+    }
+    .bottom-nav-inner {
+      gap: 2px;
+    }
+    .dir-btn, .outcome-btn {
+      min-height: 46px;
+    }
+    .emotion-btn {
+      min-height: 38px;
+      padding: 8px 14px;
+    }
+    .filter-pill {
+      min-height: 36px;
+      padding: 8px 16px;
+    }
+  }
+
+  /* ===== DEPO/WD HISTORY STYLES ===== */
+  .txn-type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .txn-btn {
+    padding: 11px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .txn-btn.depo.active { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+  .txn-btn.wd.active   { background: var(--red-dim);   border-color: var(--red);   color: var(--red); }
+  .txn-btn.adj.active  { background: var(--blue-dim);  border-color: var(--blue);  color: var(--blue); }
+  .txn-btn:hover:not(.active) { border-color: var(--border-glow); color: var(--text-primary); }
+
+  .history-table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .history-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    border-bottom: 1px solid var(--border);
+  }
+  .history-table td {
+    padding: 13px 16px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+  }
+  .history-table tr:last-child td { border-bottom: none; }
+  .history-table tbody tr:hover { background: var(--bg-hover); }
+  .txn-depo { color: var(--green); font-weight: 500; }
+  .txn-wd   { color: var(--red);   font-weight: 500; }
+  .txn-adj  { color: var(--blue);  font-weight: 500; }
+  .txn-badge-depo { background: var(--green-dim); color: var(--green); }
+  .txn-badge-wd   { background: var(--red-dim);   color: var(--red); }
+  .txn-badge-adj  { background: var(--blue-dim);  color: var(--blue); }
+
+  /* DD stats */
+  .dd-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 700px) {
+    .dd-stat-grid { grid-template-columns: 1fr 1fr; }
+    .txn-type-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .history-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+
 
   /* Animated entrance */
   @keyframes fadeUp {
@@ -1701,6 +1832,7 @@
       <button class="nav-tab" onclick="switchPage('performance')">Performance</button>
       <button class="nav-tab" onclick="switchPage('calendar')">Eco Calendar</button>
       <button class="nav-tab" onclick="switchPage('checklist')">Pre-Trade</button>
+      <button class="nav-tab" onclick="switchPage('history')">Depo/WD</button>
     </nav>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="export-btn-topbar" onclick="openExport()" title="Export / Import Data">⇅</button>
@@ -1731,6 +1863,10 @@
     <button class="bnav-btn" onclick="switchPage('checklist')" data-page="checklist">
       <span class="bnav-icon">✓</span>
       <span class="bnav-label">Checklist</span>
+    </button>
+    <button class="bnav-btn" onclick="switchPage('history')" data-page="history">
+      <span class="bnav-icon">⇅</span>
+      <span class="bnav-label">Depo/WD</span>
     </button>
     <button class="bnav-btn" onclick="openSettings()">
       <span class="bnav-icon">⚙</span>
@@ -1869,6 +2005,16 @@
         <div class="stat-value" style="color:var(--blue)" id="dashRR">—</div>
         <div class="stat-sub">rata-rata semua trade</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-label">Balance Sekarang</div>
+        <div class="stat-value accent" id="dashBalance">$0.00</div>
+        <div class="stat-sub" id="dashBalSub">% growth vs modal+depo</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Max Drawdown</div>
+        <div class="stat-value" id="dashMaxDD" style="color:var(--red)">—</div>
+        <div class="stat-sub">dari peak equity</div>
+      </div>
     </div>
 
     <div class="section-title">Recent Trades</div>
@@ -1886,7 +2032,7 @@
     </div>
 
     <div class="section-title" style="margin-top:20px;">Quick Actions</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
       <button onclick="switchPage('entry')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;color:var(--text-primary);cursor:pointer;text-align:left;transition:all 0.2s;font-family:var(--font-body);" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
         <div style="font-size:20px;margin-bottom:8px;color:var(--accent)">+</div>
         <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:4px;">New Trade</div>
@@ -1897,10 +2043,15 @@
         <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:4px;">Performance</div>
         <div style="font-size:12px;color:var(--text-muted);">Lihat statistik lengkap</div>
       </button>
-      <button onclick="switchPage('checklist')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;color:var(--text-primary);cursor:pointer;text-align:left;transition:all 0.2s;font-family:var(--font-body);" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+      <button onclick="switchPage('checklist')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;color:var(--text-primary);cursor:pointer;text-align:left;transition:all 0.2s;font-family:var(--font-body);-webkit-tap-highlight-color:transparent;touch-action:manipulation;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
         <div style="font-size:20px;margin-bottom:8px;color:var(--blue)">✓</div>
         <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:4px;">Pre-Trade Check</div>
         <div style="font-size:12px;color:var(--text-muted);">Cek sebelum entry</div>
+      </button>
+      <button onclick="switchPage('history')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;color:var(--text-primary);cursor:pointer;text-align:left;transition:all 0.2s;font-family:var(--font-body);-webkit-tap-highlight-color:transparent;touch-action:manipulation;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:20px;margin-bottom:8px;color:var(--accent)">⇅</div>
+        <div style="font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:4px;">Depo / WD</div>
+        <div style="font-size:12px;color:var(--text-muted);">Catat modal & transaksi</div>
       </button>
     </div>
 
@@ -2297,6 +2448,109 @@
 </div>
 
 
+<!-- ============ DEPO / WD HISTORY PAGE ============ -->
+<div class="page" id="page-history">
+  <div class="container">
+
+    <div class="hero-header">
+      <div>
+        <div class="hero-title">Depo / <span>WD</span></div>
+        <div class="hero-subtitle">// pencatatan deposit, withdrawal & penyesuaian balance MT5</div>
+      </div>
+    </div>
+
+    <!-- Ringkasan Balance -->
+    <div class="dd-stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Balance Sekarang</div>
+        <div class="stat-value accent" id="histCurrentBal">$0.00</div>
+        <div class="stat-sub" id="histBalSub">dari modal awal</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Total Depo</div>
+        <div class="stat-value green" id="histTotalDepo">$0.00</div>
+        <div class="stat-sub" id="histDepoCount">0 transaksi</div>
+      </div>
+      <div class="stat-card red" style="--red-dim:rgba(240,98,108,0.12);">
+        <div class="stat-label">Total WD</div>
+        <div class="stat-value red" id="histTotalWD">$0.00</div>
+        <div class="stat-sub" id="histWDCount">0 transaksi</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Max Drawdown</div>
+        <div class="stat-value" style="color:var(--red)" id="histMaxDD">—</div>
+        <div class="stat-sub">dari peak balance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">% Growth</div>
+        <div class="stat-value" id="histGrowth">—</div>
+        <div class="stat-sub">sejak modal awal + depo</div>
+      </div>
+
+    </div>
+
+    <!-- Form Tambah Transaksi -->
+    <div class="section-title" style="margin-bottom:14px;">Catat Transaksi Baru</div>
+    <div class="form-card">
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="field-group">
+          <div class="field-label">Tanggal <span class="req">*</span></div>
+          <input type="date" class="field-input" id="txnDate">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Jumlah (USD) <span class="req">*</span></div>
+          <input type="number" class="field-input" id="txnAmount" placeholder="Contoh: 100" min="0" step="0.01" oninput="updateTxnPreview()">
+        </div>
+      </div>
+      <!-- Balance preview otomatis -->
+      <div id="txnBalPreview" style="display:none;background:var(--bg-input);border:1px solid var(--border-glow);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-family:var(--font-mono);font-size:13px;">
+        <span style="color:var(--text-muted);">Balance setelah transaksi: </span>
+        <span id="txnBalPreviewVal" style="color:var(--accent);font-weight:600;">$0.00</span>
+      </div>
+
+      <div class="field-group" style="margin-bottom:14px;">
+        <div class="field-label" style="margin-bottom:7px;">Tipe Transaksi <span class="req">*</span></div>
+        <div class="txn-type-grid">
+          <button class="txn-btn depo" onclick="setTxnType(this,'DEPOSIT')">💰 Deposit</button>
+          <button class="txn-btn wd"   onclick="setTxnType(this,'WITHDRAWAL')">💸 Withdrawal</button>
+          <button class="txn-btn adj"  onclick="setTxnType(this,'ADJUSTMENT')">🔧 Koreksi</button>
+        </div>
+        <input type="hidden" id="txnType" value="">
+      </div>
+
+      <div class="field-group" style="margin-bottom:14px;">
+        <div class="field-label">Catatan (opsional)</div>
+        <input type="text" class="field-input" id="txnNote" placeholder="Contoh: Top-up untuk add position, dll">
+      </div>
+
+      <button class="submit-btn" onclick="saveTxn()" style="margin-top:4px;">SIMPAN TRANSAKSI →</button>
+    </div>
+
+    <!-- History Table -->
+    <div class="section-title" style="margin-top:20px;">Riwayat Transaksi</div>
+    <div class="history-table-wrap">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tanggal</th>
+            <th>Tipe</th>
+            <th>Jumlah</th>
+            <th>Balance Setelah</th>
+            <th>Catatan</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <tr><td colspan="7"><div class="empty-state"><div class="big-icon">◈</div><p>Belum ada transaksi. Catat depo/WD di atas.</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
 <div class="page" id="page-checklist">
   <div class="container">
 
@@ -2398,7 +2652,7 @@ function switchPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  const tabs = ['dashboard','entry','log','performance','calendar','checklist'];
+  const tabs = ['dashboard','entry','log','performance','calendar','checklist','history'];
   const tabIdx = tabs.indexOf(id);
   if (tabIdx >= 0) document.querySelectorAll('.nav-tab')[tabIdx].classList.add('active');
   // Bottom nav
@@ -2408,6 +2662,7 @@ function switchPage(id) {
   if (id === 'dashboard') updateDashboard();
   if (id === 'log') renderLog('All');
   if (id === 'performance') { updatePerformance(); drawEquityChart(); }
+  if (id === 'history') renderHistory();
 }
 
 // ===== Date =====
@@ -2418,6 +2673,8 @@ function updateDate() {
   document.getElementById('dashDate').textContent =
     `// ${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
   document.getElementById('fDate').value = d.toISOString().split('T')[0];
+  const txnDateEl = document.getElementById('txnDate');
+  if (txnDateEl) txnDateEl.value = d.toISOString().split('T')[0];
 }
 updateDate();
 
@@ -2789,6 +3046,44 @@ function updateDashboard() {
   document.getElementById('dashPF').textContent = pf;
   document.getElementById('dashRR').textContent = avgRR !== '—' ? '1:' + avgRR : '—';
 
+  // Balance & DD
+  const initBal = userProfile ? userProfile.initialBalance : 0;
+  let curBal = getLatestBalance();
+  const totalDepoD   = transactions.filter(t => t.type === 'DEPOSIT').reduce((s,t) => s + t.amount, 0);
+  const totalPnlD    = trades.reduce((s,t) => s + (t.pnl || 0), 0);
+  const totalCapD    = initBal + totalDepoD;
+  const growthPct    = totalCapD > 0 ? ((totalPnlD / totalCapD) * 100).toFixed(2) : '0.00';
+  document.getElementById('dashBalance').textContent = '$' + curBal.toFixed(2);
+  document.getElementById('dashBalSub').textContent = (parseFloat(growthPct) >= 0 ? '+' : '') + growthPct + '% vs modal+depo';
+  document.getElementById('dashBalSub').style.color = parseFloat(growthPct) >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // DD — sama logikanya: reset peak saat ada txn, hitung DD hanya dari trades
+  const ddTradePoints = [...trades].filter(t => t.balance > 0).map(t => ({ date: t.date, bal: t.balance, isTxn: false }));
+  const ddTxnPoints   = [...transactions].filter(t => t.balAfter > 0).map(t => ({ date: t.date, bal: t.balAfter, isTxn: true }));
+  const ddAllPoints   = [...ddTradePoints, ...ddTxnPoints].sort((a,b) => a.date.localeCompare(b.date) || (a.isTxn ? 1 : -1));
+  let peakBal = initBal, maxDDv = 0, maxDDPctV = 0;
+  ddAllPoints.forEach(p => {
+    if (p.isTxn) {
+      peakBal = p.bal; // reset peak — WD/Depo bukan drawdown
+    } else {
+      if (p.bal > peakBal) {
+        peakBal = p.bal;
+      } else {
+        const dd = peakBal - p.bal;
+        const ddPct = peakBal > 0 ? (dd / peakBal * 100) : 0;
+        if (dd > maxDDv) { maxDDv = dd; maxDDPctV = ddPct; }
+      }
+    }
+  });
+  const ddEl = document.getElementById('dashMaxDD');
+  if (maxDDv > 0) {
+    ddEl.textContent = '-' + maxDDPctV.toFixed(1) + '%';
+    ddEl.style.color = maxDDPctV > 20 ? 'var(--red)' : 'var(--accent)';
+  } else {
+    ddEl.textContent = '—';
+    ddEl.style.color = 'var(--text-muted)';
+  }
+
   // Streak
   let streak = 0;
   for (let t of trades) {
@@ -2971,14 +3266,17 @@ let equityChartData = [];
 
 function buildEquityData() {
   const initBal = userProfile ? userProfile.initialBalance : 0;
-  // Trades sorted oldest-first
-  const sorted = [...trades].reverse();
-  const points = [{ label: 'Start', balance: initBal }];
-  sorted.forEach((t, i) => {
-    if (t.balance && t.balance > 0) {
-      points.push({ label: t.date || `#${i+1}`, balance: t.balance });
-    }
+  // Combine trades + transactions sorted oldest-first
+  const allEvents = [];
+  [...trades].forEach(t => {
+    if (t.balance && t.balance > 0) allEvents.push({ date: t.date, balance: t.balance, label: t.date, type: 'trade' });
   });
+  [...transactions].forEach(t => {
+    if (t.balAfter > 0) allEvents.push({ date: t.date, balance: t.balAfter, label: t.date + (t.type==='DEPOSIT'?' (D)':t.type==='WITHDRAWAL'?' (W)':' (A)'), type: 'txn' });
+  });
+  allEvents.sort((a,b) => a.date.localeCompare(b.date));
+  const points = [{ label: 'Start', balance: initBal }];
+  allEvents.forEach(e => points.push(e));
   return points;
 }
 
@@ -3269,12 +3567,13 @@ function exportJSON() {
   const payload = {
     _meta: {
       app: 'Farmer Circle Journal',
-      version: '2.0',
+      version: '2.1',
       exportedAt: new Date().toISOString(),
       totalTrades: trades.length
     },
     userProfile,
     trades,
+    transactions,
     marketChecklist: getMarketItems()
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -3365,6 +3664,12 @@ function handleImport(e) {
         saveMarketItems(data.marketChecklist);
         renderChecklist1();
       }
+      if (data.transactions && Array.isArray(data.transactions)) {
+        const existingTxnIds = new Set(transactions.map(t => t.id));
+        const newTxns = data.transactions.filter(t => !existingTxnIds.has(t.id));
+        transactions = [...newTxns, ...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
+        localStorage.setItem('fcj_transactions', JSON.stringify(transactions));
+      }
 
       updateDashboard();
       closeExport();
@@ -3386,6 +3691,179 @@ function triggerDownload(blob, filename) {
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+}
+
+
+// ===== DEPO / WD TRANSACTIONS =====
+let txnType = '';
+let transactions = JSON.parse(localStorage.getItem('fcj_transactions') || '[]');
+
+function setTxnType(btn, val) {
+  txnType = val;
+  document.getElementById('txnType').value = val;
+  document.querySelectorAll('.txn-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateTxnPreview();
+}
+
+function getCurrentBalance() {
+  // Ambil balance terkini: cek trade terbaru vs txn terbaru berdasar tanggal
+  const initBal = userProfile ? userProfile.initialBalance : 0;
+  const allBals = [];
+  [...trades].forEach(t => { if (t.balance > 0) allBals.push({ date: t.date, bal: t.balance }); });
+  [...transactions].forEach(t => { if (t.balAfter > 0) allBals.push({ date: t.date, bal: t.balAfter }); });
+  if (!allBals.length) return initBal;
+  allBals.sort((a,b) => b.date.localeCompare(a.date));
+  return allBals[0].bal;
+}
+
+function updateTxnPreview() {
+  const amount = parseFloat(document.getElementById('txnAmount').value);
+  const preview = document.getElementById('txnBalPreview');
+  const previewVal = document.getElementById('txnBalPreviewVal');
+  if (!txnType || isNaN(amount) || amount <= 0) { preview.style.display = 'none'; return; }
+  const curBal = getCurrentBalance();
+  let newBal;
+  if (txnType === 'DEPOSIT')    newBal = curBal + amount;
+  else if (txnType === 'WITHDRAWAL') newBal = curBal - amount;
+  else newBal = amount; // ADJUSTMENT = set langsung ke nilai ini
+  preview.style.display = 'block';
+  previewVal.textContent = '$' + newBal.toFixed(2);
+  previewVal.style.color = newBal >= curBal ? 'var(--green)' : 'var(--red)';
+}
+
+function saveTxn() {
+  const date   = document.getElementById('txnDate').value;
+  const amount = parseFloat(document.getElementById('txnAmount').value);
+  const note   = document.getElementById('txnNote').value.trim();
+
+  if (!date)                          { showToast('⚠ Tanggal wajib diisi', true); return; }
+  if (!txnType)                       { showToast('⚠ Pilih tipe transaksi', true); return; }
+  if (isNaN(amount) || amount <= 0)   { showToast('⚠ Jumlah tidak valid', true); return; }
+
+  const curBal = getCurrentBalance();
+  let balAfter;
+  if (txnType === 'DEPOSIT')          balAfter = curBal + amount;
+  else if (txnType === 'WITHDRAWAL')  balAfter = curBal - amount;
+  else                                balAfter = amount; // ADJUSTMENT = balance baru
+
+  if (balAfter < 0) { showToast('⚠ Balance tidak boleh negatif setelah WD', true); return; }
+
+  const txn = { id: Date.now(), date, type: txnType, amount, balAfter, note };
+
+  transactions.unshift(txn);
+  localStorage.setItem('fcj_transactions', JSON.stringify(transactions));
+
+  // Reset form
+  document.getElementById('txnAmount').value = '';
+  document.getElementById('txnNote').value = '';
+  document.getElementById('txnBalPreview').style.display = 'none';
+  txnType = '';
+  document.querySelectorAll('.txn-btn').forEach(b => b.classList.remove('active'));
+
+  renderHistory();
+  updateDashboard();
+  showToast('Transaksi berhasil disimpan ✓');
+}
+
+function deleteTxn(id) {
+  if (!confirm('Hapus transaksi ini?')) return;
+  transactions = transactions.filter(t => t.id !== id);
+  localStorage.setItem('fcj_transactions', JSON.stringify(transactions));
+  renderHistory();
+  showToast('Transaksi dihapus', true);
+}
+
+function renderHistory() {
+  const body = document.getElementById('historyBody');
+  if (!body) return;
+
+  // Compute stats
+  const initBal = userProfile ? userProfile.initialBalance : 0;
+
+  // Latest balance = latest trade balance OR latest txn balAfter OR initBal
+  let curBal = initBal;
+  if (trades.length && trades[0].balance) curBal = trades[0].balance;
+  if (transactions.length && transactions[0].balAfter > 0) {
+    // take max recency: compare date of latest trade vs latest txn
+    const latestTradeBal = trades.length ? trades[0].balance : 0;
+    const latestTxnBal   = transactions[0].balAfter;
+    const latestTradeDate = trades.length ? trades[0].date : '0';
+    const latestTxnDate   = transactions.length ? transactions[0].date : '0';
+    curBal = latestTxnDate >= latestTradeDate ? latestTxnBal : (latestTradeBal || latestTxnBal);
+  }
+
+  const totalDepo = transactions.filter(t => t.type === 'DEPOSIT').reduce((s,t) => s + t.amount, 0);
+  const totalWD   = transactions.filter(t => t.type === 'WITHDRAWAL').reduce((s,t) => s + t.amount, 0);
+  // Growth = akumulasi total P&L semua trades / (modal awal + total depo)
+  // WD tidak pengaruhi growth — mencerminkan performa trading murni
+  const totalPnl     = trades.reduce((s,t) => s + (t.pnl || 0), 0);
+  const totalCapital = initBal + totalDepo; // semua modal yang pernah masuk
+  const growth = totalCapital > 0 ? ((totalPnl / totalCapital) * 100).toFixed(2) : '—';
+
+  // Max Drawdown — hanya dari P&L trading, bukan dari depo/wd
+  // Cara: setiap ada txn (depo/wd), peak di-reset ke balAfter txn tsb
+  // sehingga WD tidak dihitung sebagai drawdown
+  const tradePoints = [];
+  [...trades].forEach(t => { if (t.balance > 0) tradePoints.push({ date: t.date, bal: t.balance, isTxn: false }); });
+  const txnPoints   = [...transactions].map(t => ({ date: t.date, bal: t.balAfter, isTxn: true }));
+  const allPoints   = [...tradePoints, ...txnPoints].sort((a,b) => a.date.localeCompare(b.date) || (a.isTxn ? 1 : -1));
+  // txn sorted after trades on same date so peak resets after trades of that day
+
+  let peak = initBal, maxDD = 0, maxDDPct = 0;
+  allPoints.forEach(p => {
+    if (p.isTxn) {
+      // Depo/WD: reset peak to new balance — not a drawdown
+      peak = p.bal;
+    } else {
+      // Trade result: update peak if new high, else check drawdown
+      if (p.bal > peak) {
+        peak = p.bal;
+      } else {
+        const dd = peak - p.bal;
+        const ddPct = peak > 0 ? (dd / peak * 100) : 0;
+        if (dd > maxDD) { maxDD = dd; maxDDPct = ddPct; }
+      }
+    }
+  });
+
+  // Update stats
+  document.getElementById('histCurrentBal').textContent = '$' + curBal.toFixed(2);
+  document.getElementById('histBalSub').textContent = 'Modal awal: $' + initBal.toFixed(2);
+  document.getElementById('histTotalDepo').textContent = '$' + totalDepo.toFixed(2);
+  document.getElementById('histDepoCount').textContent = transactions.filter(t => t.type === 'DEPOSIT').length + ' transaksi';
+  document.getElementById('histTotalWD').textContent = '$' + totalWD.toFixed(2);
+  document.getElementById('histWDCount').textContent = transactions.filter(t => t.type === 'WITHDRAWAL').length + ' transaksi';
+  const ddEl = document.getElementById('histMaxDD');
+  ddEl.textContent = maxDD > 0 ? '-$' + maxDD.toFixed(2) + ' (' + maxDDPct.toFixed(1) + '%)' : '$0.00';
+  ddEl.style.color = maxDD > 0 ? 'var(--red)' : 'var(--green)';
+  const growthEl = document.getElementById('histGrowth');
+  growthEl.textContent = growth !== '—' ? (parseFloat(growth) >= 0 ? '+' : '') + growth + '%' : '—';
+  growthEl.style.color = growth !== '—' ? (parseFloat(growth) >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--text-muted)';
+
+
+  // Table
+  if (!transactions.length) {
+    body.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="big-icon">◈</div><p>Belum ada transaksi. Catat depo/WD di atas.</p></div></td></tr>';
+    return;
+  }
+
+  const typeLabel = { DEPOSIT: 'Deposit', WITHDRAWAL: 'Withdrawal', ADJUSTMENT: 'Koreksi' };
+  const typeCls   = { DEPOSIT: 'depo', WITHDRAWAL: 'wd', ADJUSTMENT: 'adj' };
+
+  body.innerHTML = transactions.map((t, i) => `
+    <tr>
+      <td style="color:var(--text-muted);">${transactions.length - i}</td>
+      <td>${t.date}</td>
+      <td><span class="badge txn-badge-${typeCls[t.type]}">${typeLabel[t.type]}</span></td>
+      <td class="txn-${typeCls[t.type]}">${t.type === 'WITHDRAWAL' ? '-$' : '+$'}${t.amount.toFixed(2)}</td>
+      <td style="color:var(--accent);font-weight:500;">$${t.balAfter.toFixed(2)}</td>
+      <td style="color:var(--text-muted);font-size:12px;">${t.note || '—'}</td>
+      <td>
+        <button onclick="deleteTxn(${t.id})" style="background:transparent;border:1px solid rgba(240,98,108,0.3);color:var(--red);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;" title="Hapus">✕</button>
+      </td>
+    </tr>
+  `).join('');
 }
 
 // ===== Init =====
