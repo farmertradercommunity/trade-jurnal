@@ -1669,6 +1669,176 @@
     font-weight: 500;
     color: var(--accent);
   }
+
+  /* ===== EDIT TRADE MODAL ===== */
+  .edit-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,11,15,0.9);
+    backdrop-filter: blur(16px);
+    z-index: 800;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .edit-overlay.open { display: flex; }
+  .edit-sheet {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 700px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 24px 24px calc(32px + env(safe-area-inset-bottom));
+    animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .edit-handle {
+    width: 40px; height: 4px;
+    background: var(--border-glow);
+    border-radius: 2px;
+    margin: 0 auto 18px;
+  }
+  .edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .edit-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .edit-title span { color: var(--accent); }
+  .edit-pips-check {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .edit-pips-check-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .edit-pips-vals {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .edit-pips-item { text-align: center; }
+  .edit-pips-item-label {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+  }
+  .edit-pips-item-val {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .recalc-btn {
+    padding: 8px 14px;
+    background: var(--blue-dim);
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .recalc-btn:hover { background: var(--blue); color: #080b0f; }
+  .edit-save-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #080b0f;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: opacity 0.2s;
+  }
+  .edit-save-btn:hover { opacity: 0.9; }
+  .edit-delete-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid rgba(240,98,108,0.4);
+    color: var(--red);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .edit-delete-btn:hover { background: var(--red-dim); }
+  .edit-cancel-btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+  }
+  .edit-cancel-btn:hover { border-color: var(--border-glow); color: var(--text-primary); }
+  .edit-log-action-btns {
+    display: flex;
+    gap: 6px;
+  }
+  .edit-log-btn {
+    background: var(--blue-dim);
+    border: 1px solid rgba(91,156,246,0.4);
+    color: var(--blue);
+    border-radius: 6px;
+    padding: 4px 9px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .edit-log-btn:hover { background: var(--blue); color: #080b0f; }
+  .del-log-btn {
+    background: transparent;
+    border: 1px solid rgba(240,98,108,0.3);
+    color: var(--red);
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 11px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .del-log-btn:hover { background: var(--red-dim); }
 </style>
 </head>
 <body>
@@ -2736,11 +2906,14 @@ function onPnlChange() {
 }
 
 function getLatestBalance() {
-  // Find most recent trade with a balance recorded
-  for (let t of trades) {
-    if (t.balance && t.balance > 0) return t.balance;
-  }
-  return userProfile ? userProfile.initialBalance : 0;
+  // Gabungkan trade balance dan txn balAfter, ambil yang paling baru berdasar id (timestamp)
+  const initBal = userProfile ? userProfile.initialBalance : 0;
+  const candidates = [];
+  trades.forEach(t => { if (t.balance > 0) candidates.push({ ts: t.id, bal: t.balance }); });
+  transactions.forEach(t => { if (t.balAfter > 0) candidates.push({ ts: t.id, bal: t.balAfter }); });
+  if (!candidates.length) return initBal;
+  candidates.sort((a, b) => b.ts - a.ts);
+  return candidates[0].bal;
 }
 
 // ===== Pip calculation per pair type =====
@@ -3143,10 +3316,23 @@ function renderLog(filter) {
           ${t.reason ? `<strong style="color:var(--accent);font-size:11px;letter-spacing:0.06em;font-family:var(--font-mono);">ALASAN ENTRY</strong><br>${t.reason}<br><br>` : ''}
           ${t.notes ? `<strong style="color:var(--blue);font-size:11px;letter-spacing:0.06em;font-family:var(--font-mono);">CATATAN</strong><br>${t.notes}` : ''}
           ${!t.reason && !t.notes ? '<span style="color:var(--text-muted);">Tidak ada catatan.</span>' : ''}
+          <div style="margin-top:12px;display:flex;gap:8px;">
+            <button class="edit-log-btn" onclick="event.stopPropagation(); openEditModal(${t.id})">✏ Edit</button>
+            <button class="del-log-btn" onclick="event.stopPropagation(); deleteTrade(${t.id})">✕ Hapus</button>
+          </div>
         </div>
       </td>
     </tr>
   `).join('');
+}
+
+function deleteTrade(id) {
+  if (!confirm('Hapus trade ini?')) return;
+  trades = trades.filter(t => t.id !== id);
+  localStorage.setItem('fcj_trades', JSON.stringify(trades));
+  renderLog('All');
+  updateDashboard();
+  showToast('Trade dihapus', true);
 }
 
 function expandRow(id) {
@@ -3707,14 +3893,8 @@ function setTxnType(btn, val) {
 }
 
 function getCurrentBalance() {
-  // Ambil balance terkini: cek trade terbaru vs txn terbaru berdasar tanggal
-  const initBal = userProfile ? userProfile.initialBalance : 0;
-  const allBals = [];
-  [...trades].forEach(t => { if (t.balance > 0) allBals.push({ date: t.date, bal: t.balance }); });
-  [...transactions].forEach(t => { if (t.balAfter > 0) allBals.push({ date: t.date, bal: t.balAfter }); });
-  if (!allBals.length) return initBal;
-  allBals.sort((a,b) => b.date.localeCompare(a.date));
-  return allBals[0].bal;
+  // Sama dengan getLatestBalance — gunakan id (timestamp) bukan tanggal
+  return getLatestBalance();
 }
 
 function updateTxnPreview() {
@@ -3871,6 +4051,372 @@ checkSetup();
 applyProfile();
 updateDashboard();
 renderChecklist1();
+</script>
+
+<!-- ===== EDIT TRADE MODAL ===== -->
+<div class="edit-overlay" id="editOverlay">
+  <div class="edit-sheet">
+    <div class="edit-handle"></div>
+    <div class="edit-header">
+      <div class="edit-title">Edit <span>Trade</span></div>
+      <button onclick="closeEditModal()" style="background:transparent;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;padding:4px;">✕</button>
+    </div>
+
+    <input type="hidden" id="editTradeId">
+
+    <!-- Pips/PnL Crosscheck Panel -->
+    <div class="edit-pips-check" id="editPipsCheck">
+      <div>
+        <div class="edit-pips-check-label">⚡ Crosscheck Kalkulasi</div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-top:2px;">dari entry, exit, lot, pair</div>
+      </div>
+      <div class="edit-pips-vals">
+        <div class="edit-pips-item">
+          <div class="edit-pips-item-label">Pips</div>
+          <div class="edit-pips-item-val" id="editCalcPips">—</div>
+        </div>
+        <div class="edit-pips-item">
+          <div class="edit-pips-item-label">P&L Calc</div>
+          <div class="edit-pips-item-val" id="editCalcPnl">—</div>
+        </div>
+        <div class="edit-pips-item">
+          <div class="edit-pips-item-label">RR</div>
+          <div class="edit-pips-item-val" id="editCalcRR">—</div>
+        </div>
+      </div>
+      <button class="recalc-btn" onclick="editRecalc()">↻ Recalc</button>
+    </div>
+
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="field-group">
+        <div class="field-label">Tanggal</div>
+        <input type="date" class="field-input" id="editDate">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Session</div>
+        <select class="field-select" id="editSession">
+          <option value="">Pilih Session</option>
+          <option value="Asia">Asia (02:00–10:00 WIB)</option>
+          <option value="London">London (14:00–23:00 WIB)</option>
+          <option value="NY Pagi">NY Pagi (19:00–22:00 WIB)</option>
+          <option value="NY Siang">NY Siang (22:00–01:00 WIB)</option>
+          <option value="NY Malam">NY Malam (01:00–04:00 WIB)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="field-group">
+        <div class="field-label">Pair</div>
+        <input type="text" class="field-input" id="editPair" placeholder="e.g. XAU/USD" oninput="editLiveRecalc()">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Lot Size</div>
+        <input type="number" class="field-input" id="editLot" step="0.01" placeholder="0.01" oninput="editLiveRecalc()">
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <div class="field-label">Arah Posisi</div>
+      <div class="direction-toggle">
+        <button class="dir-btn buy" id="editBtnBuy" onclick="setEditDirection('BUY')">▲ BUY</button>
+        <button class="dir-btn sell" id="editBtnSell" onclick="setEditDirection('SELL')">▼ SELL</button>
+      </div>
+    </div>
+
+    <div class="form-grid four" style="margin-bottom:14px;">
+      <div class="field-group">
+        <div class="field-label">Entry</div>
+        <input type="number" class="field-input" id="editEntry" step="any" placeholder="0.00000" oninput="editLiveRecalc()">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Stop Loss</div>
+        <input type="number" class="field-input" id="editSL" step="any" placeholder="0.00000" oninput="editLiveRecalc()">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Take Profit</div>
+        <input type="number" class="field-input" id="editTP" step="any" placeholder="0.00000" oninput="editLiveRecalc()">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Exit</div>
+        <input type="number" class="field-input" id="editExit" step="any" placeholder="0.00000" oninput="editLiveRecalc()">
+      </div>
+    </div>
+
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="field-group">
+        <div class="field-label">P&L ($) <span style="color:var(--blue);font-size:10px;">[auto / override]</span></div>
+        <input type="number" class="field-input" id="editPnl" step="any" placeholder="+/-" oninput="editPnlManual()">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Balance Setelah</div>
+        <input type="number" class="field-input" id="editBalance" step="any" placeholder="0.00">
+      </div>
+    </div>
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <div class="field-label">Kondisi Emosional</div>
+      <div class="emotion-grid" id="editEmotionBtns">
+        <button class="emotion-btn" onclick="setEditEmotion(this,'Calm')">😌 Calm</button>
+        <button class="emotion-btn" onclick="setEditEmotion(this,'Confident')">💪 Confident</button>
+        <button class="emotion-btn" onclick="setEditEmotion(this,'Anxious')">😰 Anxious</button>
+        <button class="emotion-btn" onclick="setEditEmotion(this,'FOMO')">🔥 FOMO</button>
+        <button class="emotion-btn" onclick="setEditEmotion(this,'Revenge')">😤 Revenge</button>
+        <button class="emotion-btn" onclick="setEditEmotion(this,'Bored')">😴 Bored</button>
+      </div>
+    </div>
+    <input type="hidden" id="editEmotion">
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <div class="field-label">Hasil Trade</div>
+      <div class="outcome-grid" id="editOutcomeBtns">
+        <button class="outcome-btn win" onclick="setEditOutcome(this,'Win')">WIN</button>
+        <button class="outcome-btn loss" onclick="setEditOutcome(this,'Loss')">LOSS</button>
+        <button class="outcome-btn be" onclick="setEditOutcome(this,'Breakeven')">BE</button>
+      </div>
+    </div>
+    <input type="hidden" id="editOutcome">
+
+    <div class="field-group" style="margin-bottom:14px;">
+      <div class="field-label">Alasan Entry</div>
+      <textarea class="field-textarea" id="editReason" placeholder="Setup, konfluensi, alasan masuk..."></textarea>
+    </div>
+    <div class="field-group" style="margin-bottom:14px;">
+      <div class="field-label">Catatan / Review</div>
+      <textarea class="field-textarea" id="editNotes" placeholder="Review setelah trade..."></textarea>
+    </div>
+
+    <button class="edit-save-btn" onclick="saveEditTrade()">SIMPAN PERUBAHAN ✓</button>
+    <button class="edit-delete-btn" onclick="deleteEditTrade()">🗑 Hapus Trade Ini</button>
+    <button class="edit-cancel-btn" onclick="closeEditModal()">Batal</button>
+  </div>
+</div>
+
+<script>
+// ===== EDIT TRADE LOGIC =====
+let editDirection = '';
+
+function openEditModal(id) {
+  const t = trades.find(tr => tr.id === id);
+  if (!t) return;
+
+  document.getElementById('editTradeId').value = id;
+  document.getElementById('editDate').value = t.date || '';
+  document.getElementById('editSession').value = t.session || '';
+  document.getElementById('editPair').value = t.pair || '';
+  document.getElementById('editLot').value = t.lot || '';
+  document.getElementById('editEntry').value = t.entry || '';
+  document.getElementById('editSL').value = t.sl || '';
+  document.getElementById('editTP').value = t.tp || '';
+  document.getElementById('editExit').value = t.exit || '';
+  document.getElementById('editPnl').value = t.pnl !== undefined ? t.pnl : '';
+  document.getElementById('editBalance').value = t.balance || '';
+  document.getElementById('editReason').value = t.reason || '';
+  document.getElementById('editNotes').value = t.notes || '';
+  document.getElementById('editEmotion').value = t.emotion || '';
+  document.getElementById('editOutcome').value = t.outcome || '';
+
+  // Direction
+  editDirection = t.direction || '';
+  document.getElementById('editBtnBuy').classList.toggle('active', editDirection === 'BUY');
+  document.getElementById('editBtnSell').classList.toggle('active', editDirection === 'SELL');
+
+  // Emotion buttons
+  document.querySelectorAll('#editEmotionBtns .emotion-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().includes(t.emotion));
+  });
+
+  // Outcome buttons
+  document.querySelectorAll('#editOutcomeBtns .outcome-btn').forEach(b => {
+    b.classList.remove('active');
+    if ((t.outcome === 'Win' && b.classList.contains('win')) ||
+        (t.outcome === 'Loss' && b.classList.contains('loss')) ||
+        (t.outcome === 'Breakeven' && b.classList.contains('be'))) {
+      b.classList.add('active');
+    }
+  });
+
+  // Live recalc display
+  editLiveRecalc();
+
+  document.getElementById('editOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeEditModal() {
+  document.getElementById('editOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function setEditDirection(dir) {
+  editDirection = dir;
+  document.getElementById('editBtnBuy').classList.toggle('active', dir === 'BUY');
+  document.getElementById('editBtnSell').classList.toggle('active', dir === 'SELL');
+  editLiveRecalc();
+}
+
+function setEditEmotion(btn, val) {
+  document.getElementById('editEmotion').value = val;
+  document.querySelectorAll('#editEmotionBtns .emotion-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setEditOutcome(btn, val) {
+  document.getElementById('editOutcome').value = val;
+  document.querySelectorAll('#editOutcomeBtns .outcome-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function editLiveRecalc() {
+  const entry  = parseFloat(document.getElementById('editEntry').value);
+  const exit   = parseFloat(document.getElementById('editExit').value);
+  const sl     = parseFloat(document.getElementById('editSL').value);
+  const lot    = parseFloat(document.getElementById('editLot').value);
+  const pair   = document.getElementById('editPair').value.trim().toUpperCase();
+
+  if (!entry || !exit || !pair) {
+    document.getElementById('editCalcPips').textContent = '—';
+    document.getElementById('editCalcPnl').textContent = '—';
+    document.getElementById('editCalcRR').textContent = '—';
+    return;
+  }
+
+  const pipFactor = getPipFactor(pair);
+  const rawDiff   = editDirection === 'SELL' ? (entry - exit) : (exit - entry);
+  const pips      = parseFloat((rawDiff * pipFactor).toFixed(1));
+
+  const pipsEl = document.getElementById('editCalcPips');
+  pipsEl.textContent = (pips > 0 ? '+' : '') + pips;
+  pipsEl.style.color = pips > 0 ? 'var(--green)' : pips < 0 ? 'var(--red)' : 'var(--accent)';
+
+  if (lot) {
+    const autoPnl = calcAutoPnl(entry, exit, lot, pair, editDirection);
+    const pnlEl = document.getElementById('editCalcPnl');
+    if (autoPnl !== null) {
+      pnlEl.textContent = (autoPnl >= 0 ? '+$' : '-$') + Math.abs(autoPnl).toFixed(2);
+      pnlEl.style.color = autoPnl >= 0 ? 'var(--green)' : 'var(--red)';
+    }
+  }
+
+  if (sl) {
+    const riskDist   = Math.abs(entry - sl);
+    const rewardDist = editDirection === 'SELL' ? (entry - exit) : (exit - entry);
+    if (riskDist > 0) {
+      const rr = (rewardDist / riskDist).toFixed(2);
+      const rrEl = document.getElementById('editCalcRR');
+      rrEl.textContent = '1:' + rr;
+      rrEl.style.color = rewardDist >= 0 ? 'var(--green)' : 'var(--red)';
+    }
+  }
+}
+
+function editRecalc() {
+  // Apply calculated pips/pnl into the edit form fields
+  const entry  = parseFloat(document.getElementById('editEntry').value);
+  const exit   = parseFloat(document.getElementById('editExit').value);
+  const lot    = parseFloat(document.getElementById('editLot').value);
+  const pair   = document.getElementById('editPair').value.trim().toUpperCase();
+
+  if (!entry || !exit || !lot || !pair || !editDirection) {
+    showToast('⚠ Lengkapi Entry, Exit, Lot, Pair, dan Arah dulu', true);
+    return;
+  }
+
+  const autoPnl = calcAutoPnl(entry, exit, lot, pair, editDirection);
+  if (autoPnl !== null) {
+    document.getElementById('editPnl').value = autoPnl.toFixed(2);
+    // Recalculate balance: use balance before this trade + new pnl
+    const id = parseInt(document.getElementById('editTradeId').value);
+    const t  = trades.find(tr => tr.id === id);
+    if (t) {
+      const prevBal = (t.balance || 0) - (t.pnl || 0);
+      document.getElementById('editBalance').value = (prevBal + autoPnl).toFixed(2);
+    }
+    showToast('✓ P&L & Balance diperbarui dari kalkulasi pips');
+    editLiveRecalc();
+  }
+}
+
+function editPnlManual() {
+  // When user manually edits pnl, recalculate balance
+  const pnl = parseFloat(document.getElementById('editPnl').value);
+  const id  = parseInt(document.getElementById('editTradeId').value);
+  const t   = trades.find(tr => tr.id === id);
+  if (!isNaN(pnl) && t) {
+    const prevBal = (t.balance || 0) - (t.pnl || 0);
+    document.getElementById('editBalance').value = (prevBal + pnl).toFixed(2);
+  }
+}
+
+function saveEditTrade() {
+  const id      = parseInt(document.getElementById('editTradeId').value);
+  const idx     = trades.findIndex(tr => tr.id === id);
+  if (idx < 0) { showToast('⚠ Trade tidak ditemukan', true); return; }
+
+  const date    = document.getElementById('editDate').value;
+  const session = document.getElementById('editSession').value;
+  const pair    = document.getElementById('editPair').value.trim().toUpperCase();
+  const lot     = parseFloat(document.getElementById('editLot').value);
+  const entry   = parseFloat(document.getElementById('editEntry').value);
+  const sl      = parseFloat(document.getElementById('editSL').value);
+  const tp      = parseFloat(document.getElementById('editTP').value);
+  const exit    = parseFloat(document.getElementById('editExit').value);
+  const pnl     = parseFloat(document.getElementById('editPnl').value);
+  const balance = parseFloat(document.getElementById('editBalance').value);
+  const emotion = document.getElementById('editEmotion').value;
+  const outcome = document.getElementById('editOutcome').value;
+  const reason  = document.getElementById('editReason').value.trim();
+  const notes   = document.getElementById('editNotes').value.trim();
+
+  if (!date || !pair || !editDirection || !outcome) {
+    showToast('⚠ Tanggal, Pair, Arah, dan Hasil wajib diisi', true);
+    return;
+  }
+
+  const pipFactor = getPipFactor(pair);
+  const rawPips   = editDirection === 'SELL' ? (entry - exit) : (exit - entry);
+  const pips      = isNaN(rawPips) ? trades[idx].pips : (rawPips * pipFactor).toFixed(1);
+  const rrActual  = (sl && entry && exit) ? (Math.abs(exit - entry) / Math.abs(entry - sl)).toFixed(2) : trades[idx].rrActual;
+  const rrPlan    = (sl && tp && entry) ? (Math.abs(tp - entry) / Math.abs(entry - sl)).toFixed(2) : trades[idx].rrPlan;
+  const prevBal   = isNaN(balance) || isNaN(pnl) ? trades[idx].balance : balance - pnl;
+  const pct       = (pnl && prevBal > 0) ? ((pnl / prevBal) * 100).toFixed(2) : trades[idx].pct;
+
+  trades[idx] = {
+    ...trades[idx],
+    date, session, pair, lot: isNaN(lot) ? trades[idx].lot : lot,
+    direction: editDirection,
+    entry: isNaN(entry) ? trades[idx].entry : entry,
+    sl: isNaN(sl) ? trades[idx].sl : sl,
+    tp: isNaN(tp) ? trades[idx].tp : tp,
+    exit: isNaN(exit) ? trades[idx].exit : exit,
+    pnl: isNaN(pnl) ? trades[idx].pnl : pnl,
+    balance: isNaN(balance) ? trades[idx].balance : balance,
+    pips, rrActual, rrPlan, pct,
+    emotion, outcome, reason, notes
+  };
+
+  localStorage.setItem('fcj_trades', JSON.stringify(trades));
+  closeEditModal();
+  renderLog('All');
+  updateDashboard();
+  showToast('✓ Trade berhasil diupdate');
+}
+
+function deleteEditTrade() {
+  const id = parseInt(document.getElementById('editTradeId').value);
+  if (!confirm('Hapus trade ini? Tindakan tidak bisa dibatalkan.')) return;
+  trades = trades.filter(tr => tr.id !== id);
+  localStorage.setItem('fcj_trades', JSON.stringify(trades));
+  closeEditModal();
+  renderLog('All');
+  updateDashboard();
+  showToast('Trade dihapus', true);
+}
+
+// Close edit modal on overlay click
+document.getElementById('editOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeEditModal();
+});
 </script>
 
 </body>
